@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const Movies = require('../models/Movie');
+const Movies = require('../models/movie');
 const verifyToken = require('../middleware/verifyToken');
 
 // Create a new movie
@@ -86,109 +86,66 @@ router.delete('/:id', verifyToken, async (req, res) => {
     }
 });
 
-/**
- * @route   GET /find/:id
- * @desc    Get user information by ID (protected)
- * @access  Protected (JWT required)
- */
-// Get user information by ID (GET /find/:id)
+// Get Movie by ID (GET /:id)
 router.get('/find/:id', verifyToken, async (req, res) => {
     try {
-        // Find user by ID and select specific fields
-        const user = await User.findById(req.params.id)
-            .select('username profilePicture bio createdAt');
-
-        // If user not found, return error
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
+        // Find movie by ID
+        const movie = await Movies.findById(req.params.id);
+        // If movie not found, return error
+        if (!movie) {
+            return res.status(404).json({ error: "Movie not found" });
         }
-
-        // Send user data
-        res.status(200).json(user);
-
+        // Send success response with movie data
+        res.status(200).json(movie);
     } catch (err) {
-        // Handle errors
-        console.error("Error finding user:", err);
+        console.error("Error getting movie:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// GET MY PROFILE (Current logged-in user)
-router.get('/me', verifyToken, async (req, res) => {
+// Get Random Movie (GET /random)
+router.get('/random', verifyToken, async (req, res) => {
+    const type = req.query.type; // Get type from query params
+    let movie;
     try {
-        // Find user by ID and exclude password
-        const user = await User.findById(req.user.userId).select('-password');
-        
-        // If user not found, return error
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
 
-        // Send user profile data
-        res.status(200).json({
-            message: "Profile retrieved successfully",
-            user: user
-        });
+        if(type === "series") {
+            // Get a random series
+            movie = await Movies.aggregate([
+                { $match: { isSeries: true } }, // Match only series
+                { $sample: { size: 1 } } // Randomly select one
+            ]);
+        }
+        else {
+            // Get a random movie
+            movie = await Movies.aggregate([
+                { $match: { isSeries: false } }, // Match only movies
+                { $sample: { size: 1 } } // Randomly select one
+            ]);
+        }
+        res.status(200).json(movie);
     } catch (err) {
-        // Handle errors
-        console.error("Error getting profile:", err);
+        console.error("Error getting random movie:", err);
         res.status(500).json({ error: err.message });
     }
 });
 
-// Get all users (GET /)
-router.get('/', verifyToken, async (req, res) => {
-    const query = req.query.new;
-    // Only admin can get all users
-    if(req.user.isAdmin) {
-        try {
-            // If query.new is true, get latest 10 users
-            const users = query 
-                ? await User.find().select('-password').sort({ _id: -1 }).limit(10) 
-                : await User.find().select('-password');
-            // Send users data
-            res.status(200).json(users);
-        } catch (err) {
-            // Handle errors
-            console.error("Error fetching users:", err);
-            res.status(500).json({ error: err.message });
-        }
-    } else {
-        // Non-admin users cannot access all users
-        res.status(403).json({ error: "You are not allowed to see all users" });
+
+// Get all movies (GET /all)
+router.get('/all', verifyToken, async (req, res) => {
+    if(!req.user.isAdmin) {
+        return res.status(403).json({ error: "You are not allowed to view all movies" });
     }
-});
-
-//GET USER STATS
-router.get("/stats", verifyToken, async (req, res) => {
-        const date = new Date();
-        const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-        const months = [
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-
-        try{
-            const stats = await User.aggregate([
-                { $match: { createdAt: { $gte: lastYear } } },
-                {
-                    $project: {
-                        month: { $month: "$createdAt" },
-                        count: { $sum: 1 }
-                    }
-                },
-                {
-                    $group: {
-                        _id: "$month",
-                        total: { $sum: 1 }
-                    }
-                }
-            ]);
-            res.status(200).json({ stats, months });
+    else {
+        try {
+            // Get all movies
+            const movies = await Movies.find(movies.reverse());
+            res.status(200).json(movies);
         } catch (err) {
-            // console.error("Error fetching user stats:", err);
+            console.error("Error getting all movies:", err);
             res.status(500).json({ error: err.message });
         }
+    }
 });
 
 module.exports = router;
