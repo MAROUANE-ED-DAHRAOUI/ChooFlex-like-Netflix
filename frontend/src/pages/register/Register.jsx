@@ -127,20 +127,22 @@ export default function Register() {
     <div className="register">
       {/* Header */}
       <div className="register__header">
-        <div className="register__header-content">
-          <img
-            className="register__logo"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/2560px-Netflix_2015_logo.svg.png"
-            alt="ChooFlex"
-          />
-          <button 
-            className="register__signin-btn" 
-            onClick={handleLoginClick}
-            type="button"
-          >
-            Sign In
-          </button>
-        </div>
+          <div className="register__header-content" style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <img
+              className="register__logo"
+              src="/choowflix-logo.svg"
+              alt="ChoowFlix"
+              style={{ height: '1rem', marginTop: '1.5rem', marginBottom: '1.5rem' }}
+            />
+            <button 
+              className="register__signin-btn" 
+              onClick={handleLoginClick}
+              type="button"
+              style={{ marginLeft: '2rem' }}
+            >
+              Sign In
+            </button>
+          </div>
       </div>
 
       {/* Main Content */}

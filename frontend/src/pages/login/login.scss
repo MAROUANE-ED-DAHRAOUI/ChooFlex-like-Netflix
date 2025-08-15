@@ -18,7 +18,7 @@
       rgba(0, 0, 0, 0.4),
       rgba(0, 0, 0, 0.8)
     ),
-    url('https://assets.nflxext.com/ffe/siteui/vlv3/3c88c59e-0f35-45c2-b4a6-b74e2e10e6c8/2e12c7e4-0661-4d4e-955c-6c4f2b3d6c30/US-en-20240305-popsignuptwoweeks-perspective_alpha_website_small.jpg');
+  url('../../images/image.jpg');
     background-size: cover;
     background-position: center;
     filter: brightness(0.3);
@@ -119,6 +119,7 @@
             color: $white;
             font-size: $font-base;
             transition: all $transition-fast;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
 
             &::placeholder {
               color: rgba(255, 255, 255, 0.6);

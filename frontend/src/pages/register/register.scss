@@ -3,12 +3,11 @@
 
 .register {
   min-height: 100vh;
-  background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.8) 100%
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.8)
     ),
-    url("https://assets.nflxext.com/ffe/siteui/vlv3/9f46b569-aff7-4354-98c8-f22dda8b1de1/6e8b1e6e-70b2-4c5e-8b8c-7f1a1e7b3b3a_EG_en_20220103_UHD.jpg");
+    url('../../images/image.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -37,10 +36,15 @@
   }
 
   &__logo {
-    height: 2.5rem;
-
+    height: 6rem;
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+    filter: drop-shadow(0 6px 32px #FFD700) drop-shadow(0 0px 12px #fff);
+    /* If using SVG text, set fill to #FFD700 (gold) for color. */
+    /* Left-aligned by default */
     @include mobile {
-      height: 2rem;
+      height: 3.5rem;
+      margin-bottom: 2rem;
     }
   }
 
@@ -194,6 +198,7 @@
     border-radius: 0 0.25rem 0.25rem 0;
     transition: background-color 0.3s ease;
     white-space: nowrap;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
 
     &:hover {
       background-color: $netflix-red-dark;

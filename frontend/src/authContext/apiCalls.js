@@ -18,7 +18,8 @@ export const login = async (user, dispatch) => {
     return res.data; // Return data for additional handling if needed
   } catch (err) {
     console.error("Login error:", err.response?.data || err.message);
-    dispatch(loginFailure(err.response?.data?.message || "Login failed"));
+    // Use .error for backend error messages
+    dispatch(loginFailure(err.response?.data?.error || "Login failed"));
     throw err; // Re-throw for component-level error handling
   }
 };
