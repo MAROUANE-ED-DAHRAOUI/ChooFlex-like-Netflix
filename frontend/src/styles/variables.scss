@@ -1,0 +1,74 @@
+// Breakpoints
+$breakpoint-sm: 600px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1400px;
+
+// Colors
+$background-dark: #181818;
+$background-card: #232323;
+$white: #fff;
+$light-gray: #b3b3b3;
+$primary-red: #e50914;
+$background-color: #181818;
+$text-primary: #fff;
+
+// Add missing variables for Netflix-inspired design
+$netflix-red: #e50914;
+$netflix-red-dark: #b0060f;
+$surface-color: #232323;
+$error-color: #e50914;
+$dark-gray: #181818;
+$medium-gray: #232323;
+$text-secondary: #b3b3b3;
+
+// Spacing
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 2rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+$spacing-10: 2.5rem;
+$spacing-12: 3rem;
+$spacing-20: 5rem;
+$spacing-2: 0.5rem;
+$spacing-1: 0.25rem;
+
+// Border radius
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 16px;
+
+// Font sizes
+$font-base: 1rem;
+$font-xl: 1.25rem;
+$font-lg: 1.125rem;
+$font-2xl: 1.5rem;
+$font-3xl: 1.875rem;
+$font-4xl: 2.25rem;
+$font-5xl: 3rem;
+$font-xs: 0.875rem;
+$font-sm: 0.95rem;
+
+// Font weights
+$font-primary: 'Roboto', Arial, sans-serif;
+$font-semibold: 600;
+$font-medium: 500;
+$font-bold: 700;
+$font-normal: 400;
+
+// Z-index
+$z-fixed: 1000;
+$z-dropdown: 1001;
+
+// Transitions
+$transition-fast: 0.2s;
+$transition-normal: 0.4s;
+
+// Shadows
+$shadow-lg: 0 4px 16px rgba(0,0,0,0.35);
+$shadow-xl: 0 8px 32px rgba(0,0,0,0.45);
+
+// Additional colors
+$primary-red-dark: #b0060f;
+$black: #000;
+$primary-red-light: #ff4c4c;

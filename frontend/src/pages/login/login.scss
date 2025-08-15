@@ -1,77 +1,267 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as mixins;
+
 .login {
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 1) 100%
-    ),
-    url("http://mppmduse2pmpovwapp.azurewebsites.net/wp-content/uploads/2019/09/netflix-background-9.jpg");
-  background-size: cover;
   position: relative;
+  height: 100vh;
+  overflow: hidden;
+  @include mixins.flex-center;
+  background: $background-dark;
 
-  .top {
-    .wrapper {
-      padding: 20px 50px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .logo {
-        height: 40px;
-      }
-    }
-  }
-
-  .container {
-    width: 100%;
-    height: 100%;
+  .login-background {
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url('https://assets.nflxext.com/ffe/siteui/vlv3/3c88c59e-0f35-45c2-b4a6-b74e2e10e6c8/2e12c7e4-0661-4d4e-955c-6c4f2b3d6c30/US-en-20240305-popsignuptwoweeks-perspective_alpha_website_small.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.3);
+  }
 
-    form {
-      width: 300px;
-      height: 300px;
-      padding: 30px;
-      border-radius: 5px;
-      background-color: var(--main-color);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
+  .login-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    @include mixins.gradient-overlay(to bottom, 0.2, 0.9);
+  }
 
-      input {
-        height: 40px;
-        border-radius: 5px;
-        background-color: gray;
-        color: white;
-        padding-left: 10px;
+  .login-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 450px;
+    padding: $spacing-8;
 
-        &::placeholder {
-          color: lightgray;
+    @include mixins.mobile {
+      max-width: 100%;
+      padding: $spacing-4;
+    }
+
+    .login-header {
+      margin-bottom: $spacing-12;
+      text-align: center;
+
+      @include mixins.mobile {
+        margin-bottom: $spacing-8;
+      }
+
+      .logo {
+        font-size: $font-4xl;
+        font-weight: $font-bold;
+        color: $primary-red;
+        text-decoration: none;
+        transition: transform $transition-fast;
+
+        &:hover {
+          transform: scale(1.05);
+        }
+
+        @include mixins.mobile {
+          font-size: $font-3xl;
         }
       }
+    }
 
-      button {
-        height: 40px;
-        border-radius: 5px;
-        background-color: red;
-        color: white;
-        border: none;
-        font-size: 18px;
-        font-weight: 500;
-        cursor: pointer;
+    .login-form-container {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      border-radius: $radius-lg;
+      padding: $spacing-12 $spacing-8;
+      box-shadow: $shadow-xl;
+
+      @include mixins.mobile {
+        padding: $spacing-8 $spacing-6;
+        border-radius: $radius-md;
       }
 
-      span {
-        color: lightgray;
-        b {
-          color: white;
+      .login-form {
+        h1 {
+          color: $white;
+          font-size: $font-3xl;
+          font-weight: $font-semibold;
+          margin-bottom: $spacing-8;
+          text-align: center;
+
+          @include mixins.mobile {
+            font-size: $font-2xl;
+            margin-bottom: $spacing-6;
+          }
+        }
+
+        .error-message {
+          background: rgba(229, 9, 20, 0.15);
+          color: $primary-red;
+          padding: $spacing-3 $spacing-4;
+          border-radius: $radius-sm;
+          margin-bottom: $spacing-6;
+          text-align: center;
+          font-size: $font-sm;
+          border: 1px solid rgba(229, 9, 20, 0.3);
+        }
+
+        .form-group {
+          margin-bottom: $spacing-6;
+
+          input {
+            width: 100%;
+            padding: $spacing-4;
+            background: rgba(51, 51, 51, 0.8);
+            border: 1px solid rgba(128, 128, 128, 0.3);
+            border-radius: $radius-sm;
+            color: $white;
+            font-size: $font-base;
+            transition: all $transition-fast;
+
+            &::placeholder {
+              color: rgba(255, 255, 255, 0.6);
+            }
+
+            &:focus {
+              border-color: $white;
+              background: rgba(51, 51, 51, 1);
+              outline: none;
+            }
+
+            &.error {
+              border-color: $primary-red;
+              background: rgba(229, 9, 20, 0.1);
+            }
+
+            &:disabled {
+              opacity: 0.6;
+              cursor: not-allowed;
+            }
+          }
+
+          .password-input {
+            position: relative;
+
+            input {
+              padding-right: $spacing-12;
+            }
+
+            .password-toggle {
+              position: absolute;
+              right: $spacing-3;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              color: rgba(255, 255, 255, 0.7);
+              cursor: pointer;
+              padding: $spacing-1;
+              transition: color $transition-fast;
+
+              &:hover {
+                color: $white;
+              }
+
+              &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+              }
+
+              svg {
+                font-size: 20px;
+              }
+            }
+          }
+
+          .validation-error {
+            color: $primary-red;
+            font-size: $font-sm;
+            margin-top: $spacing-1;
+            display: block;
+          }
+        }
+
+        .login-button {
+          @include mixins.button-primary;
+          width: 100%;
+          padding: $spacing-4;
+          font-size: $font-base;
+          font-weight: $font-semibold;
+          margin-bottom: $spacing-6;
+          transition: all $transition-fast;
+
+          &:hover:not(:disabled) {
+            background: $primary-red-light;
+            transform: translateY(-1px);
+            box-shadow: $shadow-lg;
+          }
+
+          &:disabled {
+            background: $medium-gray;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+
+        .login-help {
+          @include mixins.flex-between;
+          margin-bottom: $spacing-8;
+          font-size: $font-sm;
+
+          @include mixins.mobile {
+            flex-direction: column;
+            gap: $spacing-3;
+            text-align: center;
+          }
+
+          .remember-me {
+            @include mixins.flex-start;
+            gap: $spacing-2;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.8);
+
+            input[type="checkbox"] {
+              width: auto;
+              margin: 0;
+              accent-color: $primary-red;
+            }
+
+            span {
+              user-select: none;
+            }
+          }
+
+          .help-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color $transition-fast;
+
+            &:hover {
+              color: $white;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .signup-link {
+          text-align: center;
+          font-size: $font-sm;
+          color: rgba(255, 255, 255, 0.8);
+
+          a {
+            color: $white;
+            text-decoration: none;
+            font-weight: $font-medium;
+            transition: color $transition-fast;
+
+            &:hover {
+              color: $primary-red;
+              text-decoration: underline;
+            }
+          }
         }
       }
     }

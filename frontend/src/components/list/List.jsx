@@ -1,50 +1,54 @@
-import {
-  ArrowBackIosOutlined,
-  ArrowForwardIosOutlined,
-} from "@material-ui/icons";
-import { useRef, useState } from "react";
-import ListItem from "../listItem/ListItem";
-import "./list.scss";
+import { useState, useEffect } from 'react';
+import { moviesAPI } from '../../services/api';
+import MovieRow from '../movieRow/MovieRow';
+import './list.scss';
 
-export default function List({ list }) {
-  const [isMoved, setIsMoved] = useState(false);
-  const [slideNumber, setSlideNumber] = useState(0);
-  const [clickLimit, setClickLimit] = useState(window.innerWidth / 230);
+const List = ({ list }) => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const listRef = useRef();
+  useEffect(() => {
+    const fetchMovies = async () => {
+      if (!list?.content || list.content.length === 0) {
+        setLoading(false);
+        return;
+      }
 
-  const handleClick = (direction) => {
-    setIsMoved(true);
-    let distance = listRef.current.getBoundingClientRect().x - 50;
-    if (direction === "left" && slideNumber > 0) {
-      setSlideNumber(slideNumber - 1);
-      listRef.current.style.transform = `translateX(${230 + distance}px)`;
-    }
-    if (direction === "right" && slideNumber < 10 - clickLimit) {
-      setSlideNumber(slideNumber + 1);
-      listRef.current.style.transform = `translateX(${-230 + distance}px)`;
-    }
-  };
+      try {
+        setLoading(true);
+        // Fetch movie details for each ID in the list
+        const moviePromises = list.content.map(async (movieId) => {
+          try {
+            return await moviesAPI.getMovieById(movieId);
+          } catch (error) {
+            console.error(`Error fetching movie ${movieId}:`, error);
+            return null;
+          }
+        });
+
+        const movieResults = await Promise.all(moviePromises);
+        const validMovies = movieResults.filter(movie => movie !== null);
+        setMovies(validMovies);
+      } catch (error) {
+        console.error('Error fetching movies for list:', error);
+        setMovies([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+  }, [list]);
 
   return (
     <div className="list">
-      <span className="listTitle">{list.title}</span>
-      <div className="wrapper">
-        <ArrowBackIosOutlined
-          className="sliderArrow left"
-          onClick={() => handleClick("left")}
-          style={{ display: !isMoved && "none" }}
-        />
-        <div className="container" ref={listRef}>
-          {list.content.map((item, i) => (
-            <ListItem key={item.id || i} index={i} item={item} />
-          ))}
-        </div>
-        <ArrowForwardIosOutlined
-          className="sliderArrow right"
-          onClick={() => handleClick("right")}
-        />
-      </div>
+      <MovieRow 
+        title={list?.title || 'Untitled List'}
+        movies={movies}
+        isLoading={loading}
+      />
     </div>
   );
-}
+};
+
+export default List;

@@ -3,6 +3,9 @@ import Home from "./pages/home/Home";
 import Register from "./pages/register/Register";
 import Watch from "./pages/watch/Watch";
 import Login from "./pages/login/Login";
+import Movies from "./pages/movies/Movies";
+import Series from "./pages/series/Series";
+import Profile from "./pages/profile/Profile";
 import {
   BrowserRouter as Router,
   Routes,
@@ -32,9 +35,10 @@ const App = () => {
         />
         {user && (
           <>
-            <Route path="/movies" element={<Home type="movie" />} />
-            <Route path="/series" element={<Home type="series" />} />
-            <Route path="/watch" element={<Watch />} />
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/series" element={<Series />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/watch/:id" element={<Watch />} />
           </>
         )}
       </Routes>

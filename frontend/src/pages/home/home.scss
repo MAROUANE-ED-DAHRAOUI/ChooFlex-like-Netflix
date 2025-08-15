@@ -1,4 +1,91 @@
-.home{
-    background-color: var(--main-color);
-    overflow: hidden;
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.home {
+  background: $background-dark;
+  min-height: 100vh;
+
+  .home-content {
+    position: relative;
+    z-index: 1;
+    padding-bottom: $spacing-20;
+
+    .error-message {
+      @include flex-center;
+      @include flex-column;
+      gap: $spacing-4;
+      padding: $spacing-8;
+      margin: $spacing-8;
+      background: rgba(229, 9, 20, 0.1);
+      border: 1px solid rgba(229, 9, 20, 0.3);
+      border-radius: $radius-md;
+      text-align: center;
+
+      p {
+        color: $primary-red;
+        font-size: $font-lg;
+        margin: 0;
+      }
+
+      button {
+        @include button-primary;
+        padding: $spacing-3 $spacing-6;
+      }
+    }
+
+    .loading-lists {
+      padding: $spacing-4 0;
+    }
+
+    .content-lists {
+      padding: $spacing-4 0;
+    }
+
+    .no-content {
+      @include flex-center;
+      @include flex-column;
+      gap: $spacing-3;
+      padding: $spacing-12 $spacing-8;
+      text-align: center;
+      color: $light-gray;
+
+      h3 {
+        font-size: $font-2xl;
+        color: $white;
+        margin: 0;
+      }
+
+      p {
+        font-size: $font-lg;
+        margin: 0;
+        max-width: 500px;
+      }
+
+      @include mobile {
+        padding: $spacing-12 $spacing-4;
+
+        h3 {
+          font-size: $font-xl;
+        }
+
+        p {
+          font-size: $font-base;
+        }
+      }
+    }
+  }
+}
+
+// Animation for smooth content loading
+.home-content {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -2,6 +2,37 @@ const router = require('express').Router();
 const lists = require('../models/list');
 const verifyToken = require('../middleware/verifyToken');
 
+// Test endpoint for lists (no auth required)
+router.get('/test', async (req, res) => {
+    try {
+        res.status(200).json([
+            {
+                _id: "list1",
+                title: "Trending Now",
+                type: "movie",
+                genre: "action",
+                content: ["test1", "test2"]
+            },
+            {
+                _id: "list2", 
+                title: "Popular Series",
+                type: "series",
+                genre: "drama",
+                content: ["test2"]
+            },
+            {
+                _id: "list3",
+                title: "Action Movies",
+                type: "movie", 
+                genre: "action",
+                content: ["test1"]
+            }
+        ]);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Create a new list
 router.post('/', verifyToken, async (req, res) => {
     try {

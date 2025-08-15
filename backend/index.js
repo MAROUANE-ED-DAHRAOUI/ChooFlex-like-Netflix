@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const movieRoutes = require("./routes/movies");
@@ -16,6 +17,12 @@ mongoose.connect(process.env.URL_MONGO)
 .catch(err => {
   console.error("MongoDB connection error:", err);
 });
+
+// CORS middleware
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"], // Vite ports
+  credentials: true
+}));
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);

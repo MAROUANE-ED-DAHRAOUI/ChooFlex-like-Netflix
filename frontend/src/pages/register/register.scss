@@ -1,8 +1,8 @@
+@use "../../styles/variables" as *;
 @use "../../styles/mixins" as *;
 
 .register {
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.4) 0%,
@@ -11,208 +11,408 @@
     url("https://assets.nflxext.com/ffe/siteui/vlv3/9f46b569-aff7-4354-98c8-f22dda8b1de1/6e8b1e6e-70b2-4c5e-8b8c-7f1a1e7b3b3a_EG_en_20220103_UHD.jpg");
   background-size: cover;
   background-position: center;
-  position: relative;
+  background-attachment: fixed;
+  color: $text-primary;
 
-  .top {
-    .wrapper {
-      padding: 20px 50px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .logo {
-        height: 45px;
-      }
-
-      .loginButton {
-        background-color: #e50914;
-        border: none;
-        color: white;
-        border-radius: 4px;
-        padding: 8px 20px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        &:hover {
-          background-color: #f40612;
-        }
-      }
-    }
-  }
-
-  .container {
-    width: 100%;
-    height: 100%;
+  // Header
+  &__header {
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+
+    @include mobile {
+      padding: 1rem;
+    }
+  }
+
+  &__header-content {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__logo {
+    height: 2.5rem;
+
+    @include mobile {
+      height: 2rem;
+    }
+  }
+
+  &__signin-btn {
+    background-color: $netflix-red;
+    border: none;
+    color: white;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: $netflix-red-dark;
+    }
+
+    @include mobile {
+      padding: 0.375rem 1rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  // Main Content
+  &__content {
+    min-height: 100vh;
+    display: flex;
     align-items: center;
     justify-content: center;
+    padding: 2rem;
+
+    @include mobile {
+      padding: 1rem;
+      align-items: flex-start;
+      padding-top: 6rem;
+    }
+  }
+
+  &__hero {
+    text-align: center;
+    max-width: 950px;
+    width: 100%;
+  }
+
+  &__title {
+    font-size: 3.125rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+
+    @include tablet {
+      font-size: 2.5rem;
+    }
+
+    @include mobile {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  &__subtitle {
+    font-size: 1.625rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+
+    @include tablet {
+      font-size: 1.375rem;
+    }
+
+    @include mobile {
+      font-size: 1.125rem;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  &__description {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+
+    @include tablet {
+      font-size: 1.125rem;
+    }
+
+    @include mobile {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  // Email Form (Step 1)
+  &__email-form {
+    margin: 0 auto;
+    max-width: 600px;
+  }
+
+  &__input-group {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0.5rem;
+
+    @include mobile {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+
+  &__input {
+    flex: 1;
+    padding: 1.125rem 1rem;
+    border: 1px solid rgba(128, 128, 128, 0.7);
+    border-radius: 0.25rem 0 0 0.25rem;
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
-    padding: 0 20px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: white;
+    }
+
+    &--error {
+      border-color: $error-color;
+    }
+
+    &--readonly {
+      background-color: rgba(128, 128, 128, 0.2);
+      cursor: not-allowed;
+      border-radius: 0.25rem;
+    }
+
+    @include mobile {
+      border-radius: 0.25rem;
+    }
+  }
+
+  &__get-started-btn {
+    background-color: $netflix-red;
+    border: none;
+    color: white;
+    padding: 1.125rem 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 0 0.25rem 0.25rem 0;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: $netflix-red-dark;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    @include mobile {
+      border-radius: 0.25rem;
+      font-size: 1.125rem;
+      padding: 1rem 1.5rem;
+    }
+  }
+
+  &__error {
+    color: $error-color;
+    font-size: 0.875rem;
+    text-align: left;
+    margin-top: 0.25rem;
+  }
+
+  // Registration Form (Step 2)
+  &__form-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  &__form-card {
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 3rem;
+    border-radius: 0.5rem;
+    max-width: 450px;
+    width: 100%;
+    text-align: left;
+
+    @include mobile {
+      padding: 2rem 1.5rem;
+      margin: 0 1rem;
+    }
+  }
+
+  &__back-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__form-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
     text-align: center;
 
-    h1 {
-      font-size: 3.125rem;
-      font-weight: 900;
-      margin-bottom: 1rem;
-      max-width: 640px;
+    @include mobile {
+      font-size: 1.5rem;
+    }
+  }
 
-      @include tablet {
-        font-size: 2.5rem;
-      }
-      @include mobile {
-        font-size: 1.75rem;
-        margin-bottom: 0.5rem;
-      }
+  &__form-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+
+    @include mobile {
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__field {
+    position: relative;
+  }
+
+  &__field .register__input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid rgba(128, 128, 128, 0.7);
+    border-radius: 0.25rem;
+    background-color: $surface-color;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
     }
 
-    h2 {
-      font-size: 1.625rem;
-      font-weight: 400;
-      margin-bottom: 1rem;
-
-      @include mobile {
-        font-size: 1.25rem;
-      }
+    &:focus {
+      outline: none;
+      border-color: white;
     }
 
-    p {
-      font-size: 1.2rem;
-      font-weight: 400;
-      margin-bottom: 2rem;
-      max-width: 950px;
+    &--error {
+      border-color: $error-color;
+    }
+  }
 
-      @include mobile {
-        font-size: 1.125rem;
-        margin-bottom: 1.5rem;
-      }
+  &__password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  &__password-wrapper .register__input {
+    padding-right: 4rem;
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  &__field-error {
+    color: $error-color;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  &__submit-error {
+    background-color: rgba(229, 9, 20, 0.15);
+    border: 1px solid $error-color;
+    color: $error-color;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    text-align: center;
+    font-size: 0.875rem;
+  }
+
+  &__submit-btn {
+    background-color: $netflix-red;
+    border: none;
+    color: white;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+
+    &:hover {
+      background-color: $netflix-red-dark;
     }
 
-    .input {
-      display: flex;
-      max-width: 580px;
-      width: 100%;
-      height: 60px;
-
-      @include mobile {
-        flex-direction: column;
-        height: auto;
-        gap: 15px;
-      }
-
-      input {
-        flex: 1;
-        height: 100%;
-        border: 1px solid #8c8c8c;
-        padding: 0 16px;
-        font-size: 16px;
-        background-color: white;
-        border-radius: 2px;
-
-        @include mobile {
-          height: 50px;
-        }
-
-        &::placeholder {
-          color: #8c8c8c;
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #0080ff;
-        }
-      }
-
-      .registerButton {
-        background-color: #e50914;
-        border: none;
-        color: white;
-        font-size: 1.625rem;
-        font-weight: 400;
-        cursor: pointer;
-        padding: 0 26px;
-        border-radius: 2px;
-        transition: background-color 0.3s;
-
-        @include mobile {
-          height: 50px;
-          font-size: 1.2rem;
-        }
-
-        &:hover {
-          background-color: #f40612;
-        }
-      }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
+  }
 
-    // للمرحلة الثانية - Username و Password
-    .input-form {
-      display: flex;
+  &__login-link {
+    text-align: center;
+    margin-top: 2rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+  }
+
+  &__login-btn {
+    background: none;
+    border: none;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // Loading States
+  .register__submit-btn:disabled,
+  .register__get-started-btn:disabled {
+    background-color: rgba(229, 9, 20, 0.6);
+  }
+
+  // Responsive Design
+  @include mobile {
+    .register__input-group {
       flex-direction: column;
-      max-width: 450px;
-      width: 100%;
-      gap: 10px; // زيادة المسافة
+    }
 
-      @include mobile {
-        max-width: 100%;
-        gap: 25px;
-      }
+    .register__input {
+      border-radius: 0.25rem;
+    }
 
-      .form-input {
-        height: 25px;
-        width: 92%;
-        container-type: center-size;
-        border: 1px solid #ffffff;
-        border-radius: 20px;
-        padding: 16px; // زيادة الـ padding
-        font-size: 23px;
-        background-color: rgb(255, 255, 255);
-        color: #000000;
-        margin-bottom: 0px; // مسافة إضافية
-
-        @include mobile {
-          height: 50px;
-        }
-
-        &::placeholder {
-          color: #8c8c8c;
-        }
-
-        &:focus {
-          outline: none;
-          border-color: #0080ff;
-          box-shadow: 0 0 0 1px #0080ff;
-        }
-      }
-
-      .registerButton {
-        height: 58px;
-        background-color: #e50914;
-        border: none;
-        box-shadow: #f0cfcf;
-        color: white;
-        font-size: 1.625rem;
-        font-weight: 600;
-        border-radius: 18px;
-        cursor: pointer;
-        margin-top: 12px; // زيادة المسافة من الأعلى
-        transition: background-color 0.3s;
-
-        @include mobile {
-          height: 50px;
-          font-size: 1rem;
-        }
-
-        &:hover {
-          background-color: #f40612;
-          box-shadow: 0 0 0 1px #f0cfcf;
-        }
-      }
+    .register__get-started-btn {
+      border-radius: 0.25rem;
     }
   }
 }

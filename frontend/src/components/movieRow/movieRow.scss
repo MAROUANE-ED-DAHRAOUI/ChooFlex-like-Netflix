@@ -1,0 +1,174 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.movie-row {
+  margin-bottom: $spacing-12;
+  padding: 0 $spacing-8;
+
+  @include tablet {
+    padding: 0 $spacing-6;
+    margin-bottom: $spacing-10;
+  }
+
+  @include mobile {
+    padding: 0 $spacing-4;
+    margin-bottom: $spacing-8;
+  }
+
+  .row-title {
+    font-size: $font-xl;
+    font-weight: $font-semibold;
+    margin-bottom: $spacing-4;
+    color: $white;
+    text-transform: capitalize;
+
+    @include mobile {
+      font-size: $font-lg;
+      margin-bottom: $spacing-3;
+    }
+
+    &.loading-skeleton {
+      @include loading-skeleton;
+      height: 30px;
+      width: 200px;
+      border-radius: $radius-sm;
+
+      @include mobile {
+        height: 24px;
+        width: 150px;
+      }
+    }
+  }
+
+  .row-container {
+    position: relative;
+    
+    .scroll-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.8);
+      border: none;
+      border-radius: 50%;
+      color: $white;
+      cursor: pointer;
+      z-index: 10;
+      @include flex-center;
+      transition: all $transition-fast;
+      opacity: 0;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.9);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      svg {
+        font-size: 24px;
+      }
+
+      &.scroll-left {
+        left: -25px;
+      }
+
+      &.scroll-right {
+        right: -25px;
+      }
+
+      @include mobile {
+        display: none;
+      }
+    }
+
+    &:hover .scroll-btn {
+      opacity: 1;
+    }
+
+    .movies-grid {
+      display: flex;
+      gap: $spacing-3;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      padding: $spacing-2 0;
+      @include custom-scrollbar;
+
+      @include mobile {
+        gap: $spacing-2;
+        
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .movie-card {
+        flex-shrink: 0;
+
+        &.loading-skeleton {
+          @include loading-skeleton;
+          width: 200px;
+          height: 300px;
+          border-radius: $radius-md;
+
+          @include mobile {
+            width: 150px;
+            height: 225px;
+          }
+        }
+      }
+    }
+
+    .no-content {
+      @include flex-center;
+      height: 200px;
+      color: $light-gray;
+      font-size: $font-lg;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: $radius-md;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+
+      p {
+        text-align: center;
+      }
+
+      @include mobile {
+        height: 150px;
+        font-size: $font-base;
+      }
+    }
+  }
+}
+
+// Responsive grid adjustments
+@include desktop {
+  .movie-row .row-container .movies-grid {
+    .movie-card {
+      min-width: 200px;
+    }
+  }
+}
+
+@include tablet {
+  .movie-row .row-container .movies-grid {
+    .movie-card {
+      min-width: 180px;
+    }
+  }
+}
+
+@include mobile {
+  .movie-row .row-container .movies-grid {
+    .movie-card {
+      min-width: 150px;
+    }
+  }
+}

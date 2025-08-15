@@ -95,4 +95,35 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Test login endpoint (no database required)
+router.post('/test-login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Simple test credentials
+        if (email === 'test@example.com' && password === 'password123') {
+            const token_access = jwt.sign(
+                { userId: 'test123', isAdmin: false },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+            
+            res.status(200).json({
+                message: "Login successful",
+                user: {
+                    _id: 'test123',
+                    username: 'testuser',
+                    email: 'test@example.com',
+                    isAdmin: false
+                },
+                token_access: token_access
+            });
+        } else {
+            res.status(400).json({ error: "Invalid credentials" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;

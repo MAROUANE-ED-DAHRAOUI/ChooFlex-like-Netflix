@@ -1,5 +1,75 @@
-:root {
-  --main-color: #0b0b0b;
+@use './styles/variables' as *;
+@use './styles/mixins' as *;
+
+// Reset and global styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-primary;
+  background-color: $background-dark;
+  color: $white;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: $font-semibold;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: $font-5xl;
+  
+  @include mobile {
+    font-size: $font-3xl;
+  }
+}
+
+h2 {
+  font-size: $font-4xl;
+  
+  @include mobile {
+    font-size: $font-2xl;
+  }
+}
+
+h3 {
+  font-size: $font-3xl;
+  
+  @include mobile {
+    font-size: $font-xl;
+  }
+}
+
+p {
+  font-size: $font-base;
+  line-height: 1.6;
+}
+
+// Links
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: $primary-red;
+  }
 }
 
 .link {
@@ -7,14 +77,133 @@
   text-decoration: none;
 }
 
-@mixin tablet {
-  @media (max-width: 768px) {
-    @content;
+// Buttons
+button {
+  font-family: inherit;
+  font-size: $font-base;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+  
+  &:focus {
+    outline: 2px solid $primary-red;
+    outline-offset: 2px;
   }
 }
 
-@mixin mobile {
-  @media (max-width: 480px) {
-    @content;
+// Input elements
+input, textarea, select {
+  font-family: inherit;
+  font-size: $font-base;
+  border: none;
+  outline: none;
+  background: $background-card;
+  color: $white;
+  border-radius: $radius-sm;
+  padding: $spacing-3 $spacing-4;
+  transition: all $transition-fast;
+  
+  &::placeholder {
+    color: $light-gray;
+  }
+  
+  &:focus {
+    outline: 2px solid $primary-red;
+    outline-offset: 2px;
+  }
+}
+
+// Scrollbar for all elements
+* {
+  @include custom-scrollbar;
+}
+
+// Utility classes
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 $spacing-4;
+  
+  @include tablet {
+    padding: 0 $spacing-6;
+  }
+  
+  @include desktop {
+    padding: 0 $spacing-8;
+  }
+}
+
+.loading {
+  @include loading-skeleton;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+// Responsive utilities
+.mobile-only {
+  @include tablet {
+    display: none;
+  }
+  
+  @include desktop {
+    display: none;
+  }
+}
+
+.desktop-only {
+  @include mobile {
+    display: none;
+  }
+  
+  @include tablet {
+    display: none;
+  }
+}
+
+// Animation classes
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

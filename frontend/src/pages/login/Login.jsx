@@ -1,66 +1,142 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../authContext/apiCalls";
-import { AuthContext } from "../../authContext/AuthContext";
-import "./login.scss";
+import { useState, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { AuthContext } from '../../authContext/AuthContext';
+import { login } from '../../authContext/apiCalls';
+import './login.scss';
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { dispatch } = useContext(AuthContext);
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  
+  const { isFetching, error, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    login({ email, password }, dispatch);
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = 'Email is invalid';
+    }
+    
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  const handleSignUpClick = () => {
-    navigate("/register");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    const result = await login({ email, password }, dispatch);
+    
+    if (result.success) {
+      navigate('/');
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
     <div className="login">
-      <div className="top">
-        <div className="wrapper">
-          <img
-            className="logo"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/2560px-Netflix_2015_logo.svg.png"
-            alt=""
-          />
-        </div>
+      <div className="login-background">
+        <div className="login-overlay"></div>
       </div>
-      <div className="container">
-        <form>
-          <h1>Sign In</h1>
-          <input
-            type="email"
-            placeholder="Email or phone number"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button className="loginButton" onClick={handleLogin}>
-            Sign In
-          </button>
-          <span>
-            New to Netflix?{" "}
-            <b
-              onClick={handleSignUpClick}
-              style={{ cursor: "pointer" }}
+      
+      <div className="login-container">
+        <div className="login-header">
+          <Link to="/" className="logo">
+            ChooFlex
+          </Link>
+        </div>
+        
+        <div className="login-form-container">
+          <form onSubmit={handleSubmit} className="login-form">
+            <h1>Sign In</h1>
+            
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
+            )}
+            
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={validationErrors.email ? 'error' : ''}
+                disabled={isFetching}
+              />
+              {validationErrors.email && (
+                <span className="validation-error">{validationErrors.email}</span>
+              )}
+            </div>
+            
+            <div className="form-group">
+              <div className="password-input">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={validationErrors.password ? 'error' : ''}
+                  disabled={isFetching}
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={togglePasswordVisibility}
+                  disabled={isFetching}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </button>
+              </div>
+              {validationErrors.password && (
+                <span className="validation-error">{validationErrors.password}</span>
+              )}
+            </div>
+            
+            <button 
+              type="submit" 
+              className="login-button"
+              disabled={isFetching}
             >
-              Sign up now.
-            </b>
-          </span>
-          <small>
-            This page is protected by Google reCAPTCHA to ensure you're not a
-            bot. <b>Learn more</b>.
-          </small>
-        </form>
+              {isFetching ? 'Signing In...' : 'Sign In'}
+            </button>
+            
+            <div className="login-help">
+              <label className="remember-me">
+                <input type="checkbox" />
+                <span>Remember me</span>
+              </label>
+              <a href="#" className="help-link">Need help?</a>
+            </div>
+            
+            <div className="signup-link">
+              <span>New to ChooFlex? </span>
+              <Link to="/register">Sign up now</Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Login;

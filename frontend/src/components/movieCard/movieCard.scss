@@ -1,0 +1,282 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.movie-card {
+  position: relative;
+  width: 200px;
+  border-radius: $radius-md;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all $transition-normal;
+  animation: fadeInUp 0.6s ease-out both;
+
+  @include mobile {
+    width: 150px;
+  }
+
+  &:hover {
+    transform: scale(1.05) translateZ(0);
+    z-index: 999;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+
+    .card-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-overlay {
+      opacity: 1;
+    }
+  }
+
+  .card-image {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: $background-card;
+    overflow: hidden;
+
+    @include mobile {
+      height: 225px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform $transition-normal;
+    }
+
+    .image-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      @include flex-center;
+      background: $background-card;
+
+      .loading-spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid $primary-red;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    .image-fallback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      @include flex-center;
+      background: linear-gradient(135deg, $primary-red, $primary-red-dark);
+      font-size: $font-5xl;
+      font-weight: $font-bold;
+      color: $white;
+      text-transform: uppercase;
+
+      @include mobile {
+        font-size: $font-3xl;
+      }
+    }
+
+    .card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      @include flex-center;
+      opacity: 0;
+      transition: opacity $transition-normal;
+
+      .play-button {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        @include flex-center;
+        cursor: pointer;
+        transition: all $transition-fast;
+
+        &:hover {
+          background: $white;
+          transform: scale(1.1);
+        }
+
+        svg {
+          font-size: 30px;
+          color: $black;
+          margin-left: 3px; // Optical alignment for play icon
+        }
+
+        @include mobile {
+          width: 50px;
+          height: 50px;
+
+          svg {
+            font-size: 24px;
+          }
+        }
+      }
+    }
+  }
+
+  .card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.7) 50%,
+      transparent 100%
+    );
+    padding: $spacing-6 $spacing-4 $spacing-4;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all $transition-normal;
+
+    @include mobile {
+      padding: $spacing-4 $spacing-3 $spacing-3;
+    }
+
+    .card-info {
+      margin-bottom: $spacing-4;
+
+      .card-title {
+        font-size: $font-base;
+        font-weight: $font-semibold;
+        margin-bottom: $spacing-2;
+        color: $white;
+        @include text-ellipsis;
+
+        @include mobile {
+          font-size: $font-sm;
+        }
+      }
+
+      .card-meta {
+        @include flex-start;
+        gap: $spacing-2;
+        margin-bottom: $spacing-2;
+        flex-wrap: wrap;
+
+        span {
+          font-size: $font-xs;
+          font-weight: $font-medium;
+          padding: 2px $spacing-1;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 2px;
+          color: $white;
+
+          &.age-rating {
+            background: $primary-red;
+          }
+
+          @include mobile {
+            font-size: 10px;
+          }
+        }
+      }
+
+      .card-description {
+        font-size: $font-xs;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: $spacing-2;
+        @include line-clamp(2);
+
+        @include mobile {
+          font-size: 11px;
+          @include line-clamp(1);
+        }
+      }
+
+      .card-genre {
+        .genre-tag {
+          font-size: $font-xs;
+          color: $light-gray;
+          text-transform: capitalize;
+
+          @include mobile {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+
+    .card-actions {
+      @include flex-between;
+
+      .action-btn {
+        width: 32px;
+        height: 32px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        background: transparent;
+        color: $white;
+        cursor: pointer;
+        @include flex-center;
+        transition: all $transition-fast;
+
+        &:hover {
+          border-color: $white;
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(1.1);
+        }
+
+        &.primary {
+          background: $primary-red;
+          border-color: $primary-red;
+
+          &:hover {
+            background: $primary-red-dark;
+            border-color: $primary-red-dark;
+          }
+        }
+
+        svg {
+          font-size: 16px;
+        }
+
+        @include mobile {
+          width: 28px;
+          height: 28px;
+
+          svg {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  &.hovered {
+    .card-image img {
+      transform: scale(1.1);
+    }
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
