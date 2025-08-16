@@ -138,7 +138,7 @@ export default function Register() {
               className="register__signin-btn" 
               onClick={handleLoginClick}
               type="button"
-              style={{ marginLeft: '2rem' }}
+              style={{ marginLeft: '12rem' }}
             >
               Sign In
             </button>
