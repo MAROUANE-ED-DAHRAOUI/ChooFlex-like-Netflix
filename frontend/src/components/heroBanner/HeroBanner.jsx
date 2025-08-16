@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { PlayArrow, Add, ThumbUpAlt, KeyboardArrowDown } from '@mui/icons-material';
-import { moviesAPI } from '../../services/api';
+import { getRandomMovie } from '../../services/api';
 import './heroBanner.scss';
 
 const HeroBanner = ({ type, onGenreChange }) => {
@@ -12,7 +12,7 @@ const HeroBanner = ({ type, onGenreChange }) => {
     const fetchRandomMovie = async () => {
       try {
         setLoading(true);
-        const data = await moviesAPI.getRandomMovie(type);
+  const data = await getRandomMovie(type);
         setMovie(data);
       } catch (error) {
         console.error('Error fetching random movie:', error);

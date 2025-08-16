@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { listsAPI } from '../../services/api';
+import { getLists } from '../../services/api';
 import Navbar from '../../components/navbar/Navbar';
 import Featured from '../../components/featured/Featured';
 import List from '../../components/list/List';
@@ -16,7 +16,7 @@ const Home = ({ type }) => {
       try {
         setLoading(true);
         setError(null);
-        const data = await listsAPI.getLists(type, genre);
+  const data = await getLists(type, genre);
         setLists(data || []);
       } catch (err) {
         console.error('Error fetching lists:', err);

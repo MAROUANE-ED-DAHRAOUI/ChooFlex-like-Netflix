@@ -151,6 +151,7 @@ export const login = authAPI.login;
 export const register = authAPI.register;
 export const logout = authAPI.logout;
 
+
 export const getMovies = moviesAPI.getAll;
 export const getMovieById = moviesAPI.getById;
 export const getRandomMovie = moviesAPI.getRandom;
