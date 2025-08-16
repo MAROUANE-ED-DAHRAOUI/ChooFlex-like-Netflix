@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMovies } from "../../services/api";
+import { getRandomMovie } from "../../services/api";
 import Navbar from "../../components/navbar/Navbar";
 import MovieCard from "../../components/movieCard/MovieCard";
 import "./movies.scss";
@@ -38,10 +38,9 @@ export default function Movies() {
     try {
       setLoading(true);
       setError(null);
-      
-      // Fetch all movie content
-      const response = await getMovies({ type: "movie" });
-      setMovies(response.data || []);
+      // Use demo/test endpoint for movies
+      const demoMovie = await getRandomMovie("movie");
+      setMovies(demoMovie ? [demoMovie] : []);
     } catch (error) {
       console.error("Failed to fetch movies:", error);
       setError("Failed to load movies. Please try again later.");
