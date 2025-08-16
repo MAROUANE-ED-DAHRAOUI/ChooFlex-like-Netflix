@@ -41,8 +41,8 @@ const Login = () => {
     }
 
     const result = await login({ email, password }, dispatch);
-    
-    if (result.success) {
+    if (result && result.user && result.token_access) {
+      localStorage.setItem("token_access", result.token_access);
       navigate('/');
     }
   };
