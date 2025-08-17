@@ -12,19 +12,26 @@ const seriesRoutes = require("./routes/series");
 
 dotenv.config();
 
+if (!process.env.URL_MONGO) {
+  console.error("ERROR: URL_MONGO is not set in .env file");
+  process.exit(1);
+}
+if (!process.env.JWT_SECRET) {
+  console.error("ERROR: JWT_SECRET is not set in .env file");
+  process.exit(1);
+}
+
 mongoose.connect(process.env.URL_MONGO)
 .then(() => {
   console.log("Connected to MongoDB");
 })
 .catch(err => {
   console.error("MongoDB connection error:", err);
+  process.exit(1);
 });
 
 // CORS middleware
-app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174", "http://localhost:5175"], // Vite ports
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 

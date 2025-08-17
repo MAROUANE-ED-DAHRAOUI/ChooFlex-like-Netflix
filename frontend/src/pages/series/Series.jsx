@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getRandomMovie } from "../../services/api";
+import api from "../../services/api";
 import Navbar from "../../components/navbar/Navbar";
 import MovieCard from "../../components/movieCard/MovieCard";
 import "./series.scss";
@@ -30,9 +30,9 @@ export default function Series() {
     try {
       setLoading(true);
       setError(null);
-      // Use demo/test endpoint for series
-      const demoSeries = await getRandomMovie("series");
-      setSeries(demoSeries ? [demoSeries] : []);
+      // Fetch all series from backend
+      const response = await api.get('/series');
+      setSeries(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Failed to fetch series:", error);
       setError("Failed to load series. Please try again later.");

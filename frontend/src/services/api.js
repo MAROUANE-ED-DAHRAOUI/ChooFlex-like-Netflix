@@ -57,22 +57,22 @@ export const authAPI = {
 // Movies API calls
 export const moviesAPI = {
   getRandom: async (type = null) => {
-    // Temporarily use test endpoint and return first movie
-    const response = await api.get('/movies/test');
-    const movies = response.data.movies;
-    return type ? movies.find(m => m.isSeries === (type === 'series')) || movies[0] : movies[0];
-  },
-  
-  getById: async (id) => {
-    // Temporarily use test endpoint and find by ID
-    const response = await api.get('/movies/test');
-    const movies = response.data.movies;
-    return movies.find(m => m._id === id) || movies[0];
-  },
-  
-  getAll: async (type = null) => {
+    // Use real random endpoint
     const params = type ? { type } : {};
-    const response = await api.get('/movies/all', { params });
+    const response = await api.get('/movies/random', { params });
+    return response.data[0]; // random returns array
+  },
+
+  getById: async (id) => {
+    // Use real find endpoint
+    const response = await api.get(`/movies/find/${id}`);
+    return response.data;
+  },
+
+  getAll: async (type = null) => {
+    // Use real endpoint for all movies (admin only)
+    const params = type ? { type } : {};
+    const response = await api.get('/movies', { params });
     return response.data;
   },
   
@@ -95,8 +95,11 @@ export const moviesAPI = {
 // Lists API calls
 export const listsAPI = {
   getAll: async (type = null, genre = null) => {
-    // Temporarily use test endpoint
-    const response = await api.get('/lists/test');
+    // Use real endpoint
+    const params = {};
+    if (type) params.type = type;
+    if (genre) params.genre = genre;
+    const response = await api.get('/lists', { params });
     return response.data;
   },
 

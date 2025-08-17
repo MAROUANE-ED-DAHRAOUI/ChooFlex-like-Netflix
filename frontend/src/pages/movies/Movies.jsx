@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getRandomMovie } from "../../services/api";
+import api from "../../services/api";
 import Navbar from "../../components/navbar/Navbar";
 import MovieCard from "../../components/movieCard/MovieCard";
 import "./movies.scss";
@@ -38,9 +38,15 @@ export default function Movies() {
     try {
       setLoading(true);
       setError(null);
-      // Use demo/test endpoint for movies
-      const demoMovie = await getRandomMovie("movie");
-      setMovies(demoMovie ? [demoMovie] : []);
+      // Fetch random movies for demo (repeat random endpoint)
+      const movies = [];
+      for (let i = 0; i < 10; i++) {
+        const response = await api.get('/movies/random');
+        if (Array.isArray(response.data) && response.data[0]) {
+          movies.push(response.data[0]);
+        }
+      }
+      setMovies(movies);
     } catch (error) {
       console.error("Failed to fetch movies:", error);
       setError("Failed to load movies. Please try again later.");

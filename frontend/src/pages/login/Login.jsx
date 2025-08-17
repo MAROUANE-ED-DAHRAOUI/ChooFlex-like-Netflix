@@ -12,6 +12,7 @@ const Login = () => {
   const [validationErrors, setValidationErrors] = useState({});
   
   const { isFetching, error, dispatch } = useContext(AuthContext);
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -40,10 +41,16 @@ const Login = () => {
       return;
     }
 
-    const result = await login({ email, password }, dispatch);
-    if (result && result.user && result.token_access) {
-      localStorage.setItem("token_access", result.token_access);
-      navigate('/');
+    try {
+      const result = await login({ email, password }, dispatch);
+      if (result && result.user && result.token_access) {
+        localStorage.setItem("token_access", result.token_access);
+        setLoginError("");
+        navigate('/');
+      }
+    } catch (err) {
+      // Show backend error message if available
+      setLoginError(err.response?.data?.error || "Login failed. Please check your credentials.");
     }
   };
 
@@ -68,9 +75,9 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="login-form">
             <h1>Sign In</h1>
             
-            {error && (
+            {(error || loginError) && (
               <div className="error-message">
-                {error}
+                {loginError || error}
               </div>
             )}
             
