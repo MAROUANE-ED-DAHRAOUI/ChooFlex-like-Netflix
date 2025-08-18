@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
@@ -51,7 +52,7 @@ $text-gray: #b0b0b0;
         .skeleton-image {
           width: 100%;
           height: 300px;
-          background: linear-gradient(90deg, $background-card 25%, lighten($background-card, 10%) 50%, $background-card 75%);
+          background: linear-gradient(90deg, $background-card 25%, color.adjust($background-card, $lightness: 10%) 50%, $background-card 75%);
           background-size: 200% 100%;
           animation: loading 1.5s infinite;
           
@@ -62,7 +63,7 @@ $text-gray: #b0b0b0;
 
         .skeleton-title {
           height: 20px;
-          background: linear-gradient(90deg, $background-card 25%, lighten($background-card, 10%) 50%, $background-card 75%);
+          background: linear-gradient(90deg, $background-card 25%, color.adjust($background-card, $lightness: 10%) 50%, $background-card 75%);
           background-size: 200% 100%;
           animation: loading 1.5s infinite;
           margin: 10px;
