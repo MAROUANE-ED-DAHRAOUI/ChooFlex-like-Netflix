@@ -150,56 +150,94 @@
         max-width: 100%;
       }
     }
+        }
+
+        &.type {
+          background: rgba(255, 255, 255, 0.15);
+        }
+      }
+
+
+    .hero-description {
+      font-size: $font-lg;
+      line-height: 1.6;
+      margin-bottom: $spacing-6;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      @include mixins.line-clamp(3);
+      transition: all $transition-normal;
+
+      &.expanded {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        display: block;
+      }
+
+      @include mixins.mobile {
+        font-size: $font-base;
+        @include mixins.line-clamp(2);
+      }
+    }
 
     .hero-actions {
-      display: flex;
+      @include mixins.flex-start;
       gap: $spacing-4;
       margin-bottom: $spacing-6;
 
       @include mixins.mobile {
-        gap: $spacing-3;
-        margin-bottom: $spacing-5;
         flex-direction: column;
-        align-items: flex-start;
+        gap: $spacing-3;
       }
 
       .btn {
-        display: flex;
-        align-items: center;
+        @include mixins.flex-center;
         gap: $spacing-2;
         padding: $spacing-3 $spacing-6;
-        border-radius: $radius-md;
-        font-weight: $font-semibold;
-        font-size: $font-base;
-        transition: all $transition-normal;
         border: none;
+        border-radius: $radius-sm;
+        font-size: $font-base;
+        font-weight: $font-semibold;
         cursor: pointer;
-        text-decoration: none;
-        backdrop-filter: blur(10px);
+        transition: all $transition-fast;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
 
         @include mixins.mobile {
-          padding: $spacing-2 $spacing-4;
-          font-size: $font-sm;
-          width: fit-content;
+          width: 100%;
+          max-width: 200px;
+          padding: $spacing-4 $spacing-6;
         }
 
         svg {
-          font-size: 1.2rem;
+          font-size: 20px;
         }
 
         &.btn-primary {
-          background: $white;
-          color: $background-primary;
-          box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+          @include mixins.button-primary;
+          box-shadow: $shadow-lg;
 
           &:hover {
-            background: rgba(255, 255, 255, 0.9);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+            box-shadow: $shadow-xl;
           }
+        }
 
-          &:active {
-            transform: translateY(0);
+        &.btn-secondary {
+          @include mixins.button-secondary;
+
+          &:hover {
+            transform: translateY(-2px);
+          }
+        }
+
+        &.btn-info {
+          background: rgba(109, 109, 110, 0.7);
+          color: $white;
+          border: none;
+
+          &:hover {
+            background: rgba(109, 109, 110, 0.9);
+            transform: translateY(-2px);
           }
         }
       }
@@ -209,38 +247,25 @@
       position: relative;
       max-width: 200px;
 
-      @include mixins.mobile {
-        max-width: 150px;
-      }
-
       select {
         width: 100%;
-        padding: $spacing-2 $spacing-4;
+        padding: $spacing-3 $spacing-4;
         padding-right: $spacing-8;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: $radius-md;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid $medium-gray;
+        border-radius: $radius-sm;
         color: $white;
         font-size: $font-sm;
-        font-weight: $font-medium;
-        backdrop-filter: blur(10px);
         cursor: pointer;
         appearance: none;
 
-        @include mixins.mobile {
-          padding: $spacing-1 $spacing-3;
-          padding-right: $spacing-6;
-          font-size: $font-xs;
-        }
-
         &:focus {
+          border-color: $primary-red;
           outline: none;
-          border-color: $primary-color;
-          box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.2);
         }
 
         option {
-          background: $background-primary;
+          background: $background-dark;
           color: $white;
         }
       }
@@ -251,24 +276,18 @@
         top: 50%;
         transform: translateY(-50%);
         pointer-events: none;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 1.2rem;
-
-        @include mixins.mobile {
-          right: $spacing-1;
-          font-size: 1rem;
-        }
+        color: $light-gray;
       }
     }
-  }
+
 
   .hero-fade {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 100px;
-    background: linear-gradient(transparent, $background-primary);
+    height: 150px;
+    @include mixins.gradient-overlay(to top, 0, 1);
     z-index: 1;
   }
 
@@ -276,19 +295,12 @@
   &.loading {
     .hero-content {
       .loading-skeleton {
-        background: linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.1) 25%,
-          rgba(255, 255, 255, 0.2) 50%,
-          rgba(255, 255, 255, 0.1) 75%
-        );
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
+        @include mixins.loading-skeleton;
         border-radius: $radius-sm;
 
         &.title {
           height: 60px;
-          width: 300px;
+          width: 400px;
           margin-bottom: $spacing-4;
 
           @include mixins.mobile {
@@ -299,35 +311,39 @@
 
         &.description {
           height: 80px;
-          width: 100%;
-          max-width: 500px;
+          width: 500px;
           margin-bottom: $spacing-6;
 
           @include mixins.mobile {
             height: 60px;
-            max-width: 100%;
+            width: 100%;
           }
         }
 
         &.buttons {
           height: 50px;
-          width: 150px;
+          width: 300px;
 
           @include mixins.mobile {
-            height: 40px;
-            width: 120px;
+            width: 200px;
           }
         }
       }
     }
   }
+
+// Animation for content
+.hero-banner .hero-content .hero-info {
+  animation: slideUp 0.8s ease-out;
 }
 
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
   }
-  100% {
-    background-position: -200% 0;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

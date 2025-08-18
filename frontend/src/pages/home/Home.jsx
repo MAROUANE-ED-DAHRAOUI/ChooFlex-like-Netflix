@@ -12,6 +12,7 @@ const Home = ({ type }) => {
   const [genre, setGenre] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [heroKey, setHeroKey] = useState(0); // Key to force hero re-render
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,6 +25,11 @@ const Home = ({ type }) => {
   
   // Is searching flag
   const isSearching = searchQuery.trim().length > 0;
+
+  // Force hero re-randomization when coming back to home
+  useEffect(() => {
+    setHeroKey(prev => prev + 1);
+  }, [type]);
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -92,7 +98,7 @@ const Home = ({ type }) => {
         setSearchQuery={setSearchQuery}
         clearSearch={clearSearch}
       />
-      {!isSearching && <Featured type={type} setGenre={handleGenreChange} />}
+      {!isSearching && <Featured key={heroKey} type={type} setGenre={handleGenreChange} />}
       
       <div className="home-content">
         {isSearching ? (

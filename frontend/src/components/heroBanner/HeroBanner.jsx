@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
-import { PlayArrow, Add, ThumbUpAlt, KeyboardArrowDown } from '@mui/icons-material';
-import { getRandomMovie } from '../../services/api';
+import { PlayArrow, KeyboardArrowDown } from '@mui/icons-material';
+import { moviesAPI } from '../../services/api';
 import './heroBanner.scss';
 
 const HeroBanner = ({ type, onGenreChange }) => {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showDescription, setShowDescription] = useState(false);
 
   useEffect(() => {
     const fetchRandomMovie = async () => {
       try {
         setLoading(true);
-  const data = await getRandomMovie(type);
+        // Simply use the random endpoint which doesn't require auth
+        const data = await moviesAPI.getRandom(type);
+        console.log('Fetched movie data:', data);
         setMovie(data);
       } catch (error) {
         console.error('Error fetching random movie:', error);
@@ -24,6 +25,23 @@ const HeroBanner = ({ type, onGenreChange }) => {
     fetchRandomMovie();
   }, [type]);
 
+  // Re-randomize when component mounts (navigation back to home)
+  useEffect(() => {
+    const fetchRandomMovie = async () => {
+      try {
+        const data = await moviesAPI.getRandom(type);
+        setMovie(data);
+      } catch (error) {
+        console.error('Error fetching random movie:', error);
+      }
+    };
+
+    // Only fetch if we already have a movie (to avoid double fetch on first load)
+    if (movie) {
+      fetchRandomMovie();
+    }
+  }, []); // Empty dependency array for mount-only effect
+
   const handlePlay = () => {
     if (movie) {
       // Navigate to watch page with movie data
@@ -31,13 +49,38 @@ const HeroBanner = ({ type, onGenreChange }) => {
     }
   };
 
-  const handleMyList = () => {
-    // Add to my list functionality
-    console.log('Add to my list:', movie?.title);
+  // Function to get background image
+  const getBackgroundImage = () => {
+    // Priority: imgTitle (backdrop) > img (poster) > imgSm (small) > TMDB paths > fallback
+    if (movie.imgTitle) {
+      console.log('Using imgTitle:', movie.imgTitle);
+      return movie.imgTitle;
+    } else if (movie.img) {
+      console.log('Using img:', movie.img);
+      return movie.img;
+    } else if (movie.imgSm) {
+      console.log('Using imgSm:', movie.imgSm);
+      return movie.imgSm;
+    } else if (movie.backdrop_path) {
+      console.log('Using backdrop_path:', movie.backdrop_path);
+      return `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+    } else if (movie.poster_path) {
+      console.log('Using poster_path:', movie.poster_path);
+      return `https://image.tmdb.org/t/p/original${movie.poster_path}`;
+    }
+    
+    console.log('No image found, using fallback');
+    return '/placeholder-banner.jpg';
   };
 
-  const handleMoreInfo = () => {
-    setShowDescription(!showDescription);
+  // Function to format genres
+  const formatGenres = () => {
+    if (movie.genres && Array.isArray(movie.genres)) {
+      return movie.genres.slice(0, 3).join(' • ');
+    } else if (movie.genre) {
+      return movie.genre;
+    }
+    return '';
   };
 
   if (loading) {
@@ -67,7 +110,7 @@ const HeroBanner = ({ type, onGenreChange }) => {
       <div 
         className="hero-background"
         style={{
-          backgroundImage: `url(${movie.imgtitle || movie.imgSmall || '/placeholder-banner.jpg'})`
+          backgroundImage: `url(${getBackgroundImage()})`
         }}
       >
         <div className="hero-overlay"></div>
@@ -75,33 +118,26 @@ const HeroBanner = ({ type, onGenreChange }) => {
       
       <div className="hero-content">
         <div className="hero-info">
-          <h1 className="hero-title">{movie.title}</h1>
+          <h1 className="hero-title">{movie.title || movie.name}</h1>
           
           <div className="hero-meta">
-            <span className="year">{movie.year}</span>
-            <span className="age-rating">{movie.limit}+</span>
-            <span className="genre">{movie.genre}</span>
+            {movie.release_date && (
+              <span className="year">{new Date(movie.release_date).getFullYear()}</span>
+            )}
+            {movie.year && <span className="year">{movie.year}</span>}
+            {movie.limit && <span className="age-rating">{movie.limit}+</span>}
+            {formatGenres() && <span className="genre">{formatGenres()}</span>}
             <span className="type">{movie.isSeries ? 'Series' : 'Movie'}</span>
           </div>
 
-          <p className={`hero-description ${showDescription ? 'expanded' : ''}`}>
-            {movie.description || 'No description available.'}
+          <p className="hero-description">
+            {movie.desc || movie.overview || movie.description || 'Description not available.'}
           </p>
 
           <div className="hero-actions">
             <button className="btn btn-primary" onClick={handlePlay}>
               <PlayArrow />
               Play
-            </button>
-            
-            <button className="btn btn-secondary" onClick={handleMyList}>
-              <Add />
-              My List
-            </button>
-            
-            <button className="btn btn-info" onClick={handleMoreInfo}>
-              <ThumbUpAlt />
-              More Info
             </button>
           </div>
 
