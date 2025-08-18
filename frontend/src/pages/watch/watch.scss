@@ -1,6 +1,10 @@
 .watch {
   width: 100vw;
   height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 
   .back {
     display: flex;
@@ -11,11 +15,170 @@
     color: white;
     cursor: pointer;
     z-index: 2;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.9);
+    }
   }
 
   .video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+  }
+
+  .youtube-player {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .video-fallback,
+  .trailer-only {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: white;
+    text-align: center;
+    padding: 20px;
+
+    h2, h3 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    p {
+      margin: 10px 0;
+      color: #ccc;
+      font-size: 1.1rem;
+    }
+
+    .video {
+      max-width: 90%;
+      max-height: 70%;
+      margin-top: 20px;
+    }
+
+    .youtube-player {
+      width: 90vw;
+      height: 70vh;
+      max-width: 1200px;
+      max-height: 675px;
+      margin-top: 20px;
+    }
+  }
+
+  .no-video-available {
+    text-align: center;
+    color: white;
+    padding: 20px;
+
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e50914;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #f40612;
+      }
+    }
+  }
+
+  .loading, .error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: white;
+    font-size: 1.5rem;
+    background: #000;
+  }
+
+  .error {
+    flex-direction: column;
+    text-align: center;
+    
+    p {
+      margin-top: 20px;
+      color: #ccc;
+    }
+  }
+
+  .no-video {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: white;
+    text-align: center;
+    padding: 20px;
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    p {
+      margin: 10px 0;
+      color: #ccc;
+    }
+
+    .movie-info {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+      align-items: flex-start;
+      max-width: 800px;
+
+      img {
+        width: 200px;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .details {
+        text-align: left;
+        
+        p {
+          margin: 15px 0;
+          font-size: 1rem;
+          line-height: 1.5;
+          
+          strong {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      .movie-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        img {
+          width: 150px;
+          height: 225px;
+        }
+
+        .details {
+          text-align: center;
+        }
+      }
+    }
   }
 }

@@ -1,40 +1,55 @@
 const mongoose = require('mongoose');
 
 const MovieSchema = new mongoose.Schema({
-    title: {
+  tmdbId: {
+    type: Number,
+    unique: true,
+    sparse: true // Allow null values but unique when present
+  },
+  title: {
     type: String,
-    required: true,
-    unique: true
+    required: true
+  },
+  desc: {
+    type: String
   },
   description: {
     type: String
   },
+  img: {
+    type: String
+  },
+  imgTitle: {
+    type: String
+  },
+  imgSm: {
+    type: String
+  },
   imgtitle: {
     type: String
-    },
+  },
   imgSmall: {
     type: String
-    },
-
-    trailer: {
+  },
+  trailer: {
     type: String
-    },
-    video: {
+  },
+  video: {
     type: String
-    },
-    year: {
+  },
+  year: {
     type: String
-    },
-    limit: {
+  },
+  limit: {
     type: Number
-    },
-    genre: {
-        type: String
-    },
-    isSeries: {
+  },
+  genre: {
+    type: String
+  },
+  isSeries: {
     type: Boolean,
     default: false
-    },
+  },
 }, {timestamps: true});
 
 module.exports = mongoose.model('Movie', MovieSchema);

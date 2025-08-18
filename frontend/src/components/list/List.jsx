@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { moviesAPI } from '../../services/api';
+import { getMovieById } from '../../services/api';
 import MovieRow from '../movieRow/MovieRow';
 import './list.scss';
 
@@ -16,10 +16,20 @@ const List = ({ list }) => {
 
       try {
         setLoading(true);
-        // Fetch movie details for each ID in the list
+        
+        // Check if content is already populated with full movie objects
+        const firstItem = list.content[0];
+        if (firstItem && typeof firstItem === 'object' && firstItem.title) {
+          // Content is already populated
+          setMovies(list.content);
+          setLoading(false);
+          return;
+        }
+        
+        // Content contains only IDs, need to fetch movie details
         const moviePromises = list.content.map(async (movieId) => {
           try {
-            return await moviesAPI.getMovieById(movieId);
+            return await getMovieById(movieId);
           } catch (error) {
             console.error(`Error fetching movie ${movieId}:`, error);
             return null;

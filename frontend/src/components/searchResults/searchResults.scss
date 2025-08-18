@@ -1,0 +1,110 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Define $text-gray if not imported from variables
+$text-gray: #b0b0b0;
+
+.search-results {
+  padding: 0 4%;
+  margin-bottom: 50px;
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    
+    h2 {
+      font-size: $font-2xl;
+      font-weight: $font-bold;
+      color: $white;
+      margin: 0;
+      
+      @include mobile {
+        font-size: $font-xl;
+      }
+    }
+
+    .results-count {
+      font-size: $font-sm;
+      color: $text-gray;
+      font-weight: $font-medium;
+    }
+  }
+
+  .search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    
+    @include mobile {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    &.loading {
+      .search-card-skeleton {
+        background: $background-card;
+        border-radius: $radius-md;
+        overflow: hidden;
+        
+        .skeleton-image {
+          width: 100%;
+          height: 300px;
+          background: linear-gradient(90deg, $background-card 25%, lighten($background-card, 10%) 50%, $background-card 75%);
+          background-size: 200% 100%;
+          animation: loading 1.5s infinite;
+          
+          @include mobile {
+            height: 225px;
+          }
+        }
+
+        .skeleton-title {
+          height: 20px;
+          background: linear-gradient(90deg, $background-card 25%, lighten($background-card, 10%) 50%, $background-card 75%);
+          background-size: 200% 100%;
+          animation: loading 1.5s infinite;
+          margin: 10px;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+
+  .search-error {
+    text-align: center;
+    padding: 60px 20px;
+    
+    p {
+      font-size: $font-lg;
+      color: $text-gray;
+      margin: 0;
+    }
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    
+    p {
+      font-size: $font-lg;
+      color: $text-gray;
+      margin: 10px 0;
+      
+      &:first-child {
+        font-weight: $font-semibold;
+        color: $white;
+      }
+    }
+  }
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

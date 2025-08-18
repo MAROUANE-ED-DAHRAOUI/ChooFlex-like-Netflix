@@ -29,8 +29,8 @@ router.get('/test', async (req, res) => {
     }
 });
 
-// Get all series (GET /)
-router.get('/', verifyToken, async (req, res) => {
+// Get all series (GET /) - temporarily without auth for testing
+router.get('/', async (req, res) => {
     try {
         // Get all series
         const series = await Movies.find({ isSeries: true });

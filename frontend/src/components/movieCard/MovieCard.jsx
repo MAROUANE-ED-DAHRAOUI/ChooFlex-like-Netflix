@@ -38,14 +38,29 @@ const MovieCard = ({ movie, index }) => {
 
   const handleImageLoad = () => {
     setImageLoaded(true);
+    setImageError(false);
+    console.log(`✅ Image loaded for ${movie.title}`);
   };
 
   const handleImageError = () => {
     setImageError(true);
-    setImageLoaded(true);
+    setImageLoaded(false);
+    console.log(`❌ Image failed for ${movie.title}, URL: ${imageUrl}`);
   };
 
-  const imageUrl = movie.imgSmall || movie.imgtitle || '/placeholder-movie.jpg';
+  // Use the correct field names from the backend: img, imgSm, imgTitle
+  // Priority: imgSm (small poster) -> img (main poster) -> imgTitle (backdrop)
+  const imageUrl = movie.imgSm || movie.img || movie.imgTitle;
+  
+  // Handle case where no image is available
+  const hasValidImage = imageUrl && imageUrl.trim() !== '';
+  
+  console.log(`MovieCard ${movie.title}:`, {
+    hasValidImage,
+    imageUrl,
+    imageLoaded,
+    imageError
+  });
 
   return (
     <div 
@@ -58,23 +73,30 @@ const MovieCard = ({ movie, index }) => {
       }}
     >
       <div className="card-image">
-        {!imageLoaded && (
+        {!imageLoaded && hasValidImage && (
           <div className="image-placeholder">
             <div className="loading-spinner"></div>
           </div>
         )}
         
-        {!imageError ? (
+        {hasValidImage ? (
           <img 
             src={imageUrl}
-            alt={movie.title}
+            alt={movie.title || 'Movie poster'}
             onLoad={handleImageLoad}
             onError={handleImageError}
-            style={{ display: imageLoaded && !imageError ? 'block' : 'none' }}
+            style={{ 
+              display: imageLoaded && !imageError ? 'block' : 'none',
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
           />
-        ) : (
+        ) : null}
+        
+        {(!hasValidImage || imageError) && (
           <div className="image-fallback">
-            <span>{movie.title?.charAt(0) || '?'}</span>
+            <span>{movie.title?.charAt(0)?.toUpperCase() || '?'}</span>
           </div>
         )}
 
@@ -98,8 +120,8 @@ const MovieCard = ({ movie, index }) => {
           </div>
 
           <p className="card-description">
-            {movie.description?.substring(0, 100)}
-            {movie.description?.length > 100 ? '...' : ''}
+            {movie.desc?.substring(0, 100)}
+            {movie.desc?.length > 100 ? '...' : ''}
           </p>
 
           <div className="card-genre">

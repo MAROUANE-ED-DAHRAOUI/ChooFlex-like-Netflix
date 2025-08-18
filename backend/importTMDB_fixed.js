@@ -62,6 +62,26 @@ async function getTVVideos(tvId) {
   }
 }
 
+// Genre mapping
+const movieGenres = {
+  28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
+  99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
+  27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction',
+  10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western'
+};
+
+const tvGenres = {
+  10759: 'Action & Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
+  99: 'Documentary', 18: 'Drama', 10751: 'Family', 10762: 'Kids',
+  9648: 'Mystery', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy',
+  10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics', 37: 'Western'
+};
+
+function getGenreNames(genreIds, type) {
+  const genreMap = type === 'movie' ? movieGenres : tvGenres;
+  return genreIds.map(id => genreMap[id] || 'Unknown').filter(Boolean);
+}
+
 async function importMovies(limit = 20) {
   console.log('🎬 Starting to import movies...');
   
@@ -83,6 +103,17 @@ async function importMovies(limit = 20) {
 
         const trailer = await getMovieVideos(m.id);
         
+        // Use sample video files for demo purposes (since we don't have actual movie files)
+        const sampleVideos = [
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+        ];
+        
+        const randomSampleVideo = sampleVideos[Math.floor(Math.random() * sampleVideos.length)];
+        
         const doc = new Movie({
           tmdbId: m.id,
           title: m.title,
@@ -90,8 +121,8 @@ async function importMovies(limit = 20) {
           img: m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : '',
           imgTitle: m.backdrop_path ? `https://image.tmdb.org/t/p/w1280${m.backdrop_path}` : '',
           imgSm: m.poster_path ? `https://image.tmdb.org/t/p/w300${m.poster_path}` : '',
-          trailer: trailer,
-          video: trailer, // Using trailer as video for demo
+          trailer: trailer, // Keep YouTube trailer for reference
+          video: randomSampleVideo, // Use sample MP4 for actual playback
           year: m.release_date ? m.release_date.slice(0, 4) : '2024',
           limit: m.adult ? 18 : 13,
           genre: m.genre_ids && m.genre_ids.length > 0 ? getGenreNames(m.genre_ids, 'movie').join(', ') : 'Unknown',
@@ -135,6 +166,17 @@ async function importSeries(limit = 20) {
 
         const trailer = await getTVVideos(s.id);
         
+        // Use sample video files for demo purposes
+        const sampleVideos = [
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+        ];
+        
+        const randomSampleVideo = sampleVideos[Math.floor(Math.random() * sampleVideos.length)];
+        
         const doc = new Movie({
           tmdbId: s.id,
           title: s.name,
@@ -142,8 +184,8 @@ async function importSeries(limit = 20) {
           img: s.poster_path ? `https://image.tmdb.org/t/p/w500${s.poster_path}` : '',
           imgTitle: s.backdrop_path ? `https://image.tmdb.org/t/p/w1280${s.backdrop_path}` : '',
           imgSm: s.poster_path ? `https://image.tmdb.org/t/p/w300${s.poster_path}` : '',
-          trailer: trailer,
-          video: trailer, // Using trailer as video for demo
+          trailer: trailer, // Keep YouTube trailer for reference  
+          video: randomSampleVideo, // Use sample MP4 for actual playback
           year: s.first_air_date ? s.first_air_date.slice(0, 4) : '2024',
           limit: s.adult ? 18 : 13,
           genre: s.genre_ids && s.genre_ids.length > 0 ? getGenreNames(s.genre_ids, 'tv').join(', ') : 'Unknown',
@@ -164,30 +206,6 @@ async function importSeries(limit = 20) {
   }
   
   console.log(`\n🎉 Imported ${totalImported} TV series successfully!`);
-}
-
-// Genre mapping
-const movieGenres = {
-  28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
-  99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
-  27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction',
-  10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western'
-};
-
-const tvGenres = {
-  10759: 'Action & Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
-  99: 'Documentary', 18: 'Drama', 10751: 'Family', 10762: 'Kids',
-  9648: 'Mystery', 10763: 'News', 10764: 'Reality', 10765: 'Sci-Fi & Fantasy',
-  10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics', 37: 'Western'
-};
-
-function getGenreNames(genreIds, type) {
-  const genreMap = type === 'movie' ? movieGenres : tvGenres;
-  return genreIds.map(id => genreMap[id] || 'Unknown').filter(Boolean);
-}
-function getGenreNames(genreIds, type) {
-  const genreMap = type === 'movie' ? movieGenres : tvGenres;
-  return genreIds.map(id => genreMap[id] || 'Unknown').filter(Boolean);
 }
 
 async function createContentLists() {

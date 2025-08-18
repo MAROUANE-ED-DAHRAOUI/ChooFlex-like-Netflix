@@ -101,11 +101,12 @@ export const moviesAPI = {
 
 // Lists API calls
 export const listsAPI = {
-  getAll: async (type = null, genre = null) => {
-    // Use real endpoint
+  getAll: async (type = null, genre = null, populate = true) => {
+    // Use real endpoint with optional population
     const params = {};
     if (type) params.type = type;
     if (genre) params.genre = genre;
+    if (populate) params.populate = 'true';
     const response = await api.get('/lists', { params });
     return response.data;
   },
@@ -152,6 +153,17 @@ export const usersAPI = {
     const response = await api.get('/users/stats');
     return response.data;
   },
+};
+
+// Search movies and TV shows
+export const searchContent = async (query) => {
+  try {
+    const response = await api.get(`/search?query=${encodeURIComponent(query)}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error searching content:', error);
+    throw error;
+  }
 };
 
 export default api;

@@ -133,6 +133,8 @@
         width: 0;
         overflow: hidden;
         transition: width $transition-normal;
+        @include flex-center;
+        gap: $spacing-2;
 
         input {
           width: 250px;
@@ -154,6 +156,18 @@
 
           @include mobile {
             width: 200px;
+          }
+        }
+
+        .clear-search {
+          cursor: pointer;
+          font-size: 20px;
+          color: $light-gray;
+          transition: color $transition-fast;
+          margin-left: $spacing-2;
+
+          &:hover {
+            color: $white;
           }
         }
       }

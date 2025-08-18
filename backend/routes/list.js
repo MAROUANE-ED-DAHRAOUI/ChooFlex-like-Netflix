@@ -88,6 +88,7 @@ router.delete('/:id', verifyToken, async (req, res) => {
 router.get('/', async (req, res) => {
     const typequery = req.query.type;
     const genrequery = req.query.genre;
+    const populate = req.query.populate === 'true'; // Option to populate content
     let list = [];
 
     try {
@@ -165,6 +166,30 @@ router.get('/', async (req, res) => {
         } else {
             // Get all lists
             list = await lists.aggregate([{ $sample: { size: 10 } }]);
+        }
+
+        // If populate is requested, populate the content with actual movie data
+        if (populate && list.length > 0) {
+            const Movie = require('../models/movie');
+            
+            for (let i = 0; i < list.length; i++) {
+                if (list[i].content && Array.isArray(list[i].content)) {
+                    const populatedContent = [];
+                    
+                    for (const movieId of list[i].content) {
+                        try {
+                            const movie = await Movie.findById(movieId);
+                            if (movie) {
+                                populatedContent.push(movie);
+                            }
+                        } catch (error) {
+                            console.error(`Error fetching movie ${movieId}:`, error);
+                        }
+                    }
+                    
+                    list[i].content = populatedContent;
+                }
+            }
         }
 
         res.status(200).json(list);

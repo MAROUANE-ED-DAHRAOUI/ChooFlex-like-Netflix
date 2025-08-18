@@ -127,8 +127,8 @@ router.delete('/:id', verifyToken, async (req, res) => {
     }
 });
 
-// Get Movie by ID (GET /:id)
-router.get('/find/:id', verifyToken, async (req, res) => {
+// Get Movie by ID (GET /:id) - temporarily without auth for testing
+router.get('/find/:id', async (req, res) => {
     try {
         // Find movie by ID
         const movie = await Movies.findById(req.params.id);

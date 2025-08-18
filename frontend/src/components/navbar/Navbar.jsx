@@ -1,15 +1,14 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Notifications, ArrowDropDown, AccountCircle } from '@mui/icons-material';
+import { Search, Notifications, ArrowDropDown, AccountCircle, Close } from '@mui/icons-material';
 import { AuthContext } from '../../authContext/AuthContext';
 import { logout } from '../../authContext/apiCalls';
 import './navbar.scss';
 
-const Navbar = () => {
+const Navbar = ({ onSearch, searchQuery, setSearchQuery, clearSearch }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -29,12 +28,26 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  const handleSearch = (e) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-      setShowSearch(false);
-      setSearchQuery('');
+      onSearch && onSearch(searchQuery.trim());
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    if (onSearch) {
+      onSearch(value);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setShowSearch(false);
+    if (clearSearch) {
+      clearSearch();
     }
   };
 
@@ -105,20 +118,26 @@ const Navbar = () => {
         {/* Right side */}
         <div className="navbar-right">
           {/* Search */}
-          <div className={`search-container ${showSearch ? 'active' : ''}`}>
+          <div className={`search-container ${showSearch || searchQuery ? 'active' : ''}`}>
             <Search 
               className="search-icon" 
               onClick={() => setShowSearch(!showSearch)}
             />
-            {showSearch && (
-              <form onSubmit={handleSearch} className="search-form">
+            {(showSearch || searchQuery) && (
+              <form onSubmit={handleSearchSubmit} className="search-form">
                 <input
                   type="text"
                   placeholder="Search movies, TV shows..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearchChange}
                   autoFocus
                 />
+                {searchQuery && (
+                  <Close 
+                    className="clear-search" 
+                    onClick={handleClearSearch}
+                  />
+                )}
               </form>
             )}
           </div>
