@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Notifications, ArrowDropDown, AccountCircle, Close } from '@mui/icons-material';
+import { Search, Notifications, ArrowDropDown, AccountCircle, Close, Settings, ExitToApp } from '@mui/icons-material';
 import { AuthContext } from '../../authContext/AuthContext';
 import { logout } from '../../authContext/apiCalls';
 import './navbar.scss';
@@ -10,17 +10,29 @@ const Navbar = ({ onSearch, searchQuery, setSearchQuery, clearSearch }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   
-  const { dispatch } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
 
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -150,29 +162,55 @@ const Navbar = ({ onSearch, searchQuery, setSearchQuery, clearSearch }) => {
           {/* Profile Dropdown */}
           <div 
             className="profile-dropdown"
-            onMouseEnter={() => setShowDropdown(true)}
-            onMouseLeave={() => setShowDropdown(false)}
+            ref={dropdownRef}
           >
-            <div className="profile-trigger">
-              <AccountCircle className="profile-icon" />
-              <ArrowDropDown className="dropdown-arrow" />
+            <div 
+              className="profile-trigger"
+              onClick={() => setShowDropdown(!showDropdown)}
+            >
+              <div className="profile-avatar">
+                <AccountCircle className="profile-icon" />
+              </div>
+              <ArrowDropDown className={`dropdown-arrow ${showDropdown ? 'rotated' : ''}`} />
             </div>
             
-            {showDropdown && (
-              <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={() => navigate('/profile')}>
-                  <AccountCircle className="dropdown-icon" />
-                  Profile
+            <div className={`dropdown-menu ${showDropdown ? 'show' : ''}`}>
+              <div className="dropdown-header">
+                <div className="user-avatar">
+                  <AccountCircle />
                 </div>
-                <div className="dropdown-item" onClick={() => navigate('/settings')}>
-                  Settings
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={handleLogout}>
-                  Sign out
+                <div className="user-info">
+                  <span className="user-name">{user?.username || 'User'}</span>
+                  <span className="user-email">{user?.email || 'user@example.com'}</span>
                 </div>
               </div>
-            )}
+              
+              <div className="dropdown-divider"></div>
+              
+              <div className="dropdown-items">
+                <button 
+                  className="dropdown-item" 
+                  onClick={() => {
+                    navigate('/settings');
+                    setShowDropdown(false);
+                  }}
+                >
+                  <Settings className="dropdown-icon" />
+                  <span>Settings</span>
+                </button>
+                
+                <button 
+                  className="dropdown-item logout" 
+                  onClick={() => {
+                    handleLogout();
+                    setShowDropdown(false);
+                  }}
+                >
+                  <ExitToApp className="dropdown-icon" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

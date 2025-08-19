@@ -17,9 +17,15 @@ $netflix-red: #e50914;
 $netflix-red-dark: #b0060f;
 $surface-color: #232323;
 $error-color: #e50914;
-$dark-gray: #181818;
-$medium-gray: #232323;
+$dark-gray: #0f0f0f;
+$medium-gray: #333333;
 $text-secondary: #b3b3b3;
+
+// Status colors
+$success-green: #22c55e;
+$danger-red: #ef4444;
+$warning-orange: #f59e0b;
+$info-blue: #3b82f6;
 
 // Spacing
 $spacing-1: 0.25rem;
@@ -67,6 +73,7 @@ $transition-normal: 0.4s;
 // Shadows
 $shadow-lg: 0 4px 16px rgba(0,0,0,0.35);
 $shadow-xl: 0 8px 32px rgba(0,0,0,0.45);
+$shadow-md: 0 2px 8px rgba(0,0,0,0.25);
 
 // Additional colors
 $primary-color: #e50914; // Netflix red

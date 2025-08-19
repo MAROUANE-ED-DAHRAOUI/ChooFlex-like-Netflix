@@ -12,6 +12,43 @@ html {
   scroll-behavior: smooth;
 }
 
+// Theme support
+:root {
+  &[data-theme="light"] {
+    --background-primary: #ffffff;
+    --background-card: #f8f9fa;
+    --text-primary: #000000;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+  }
+  
+  &[data-theme="dark"] {
+    --background-primary: #{$background-dark};
+    --background-card: #{$background-card};
+    --text-primary: #{$white};
+    --text-secondary: #{$light-gray};
+    --border-color: #{$medium-gray};
+  }
+  
+  &[data-theme="system"] {
+    @media (prefers-color-scheme: light) {
+      --background-primary: #ffffff;
+      --background-card: #f8f9fa;
+      --text-primary: #000000;
+      --text-secondary: #6c757d;
+      --border-color: #dee2e6;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      --background-primary: #{$background-dark};
+      --background-card: #{$background-card};
+      --text-primary: #{$white};
+      --text-secondary: #{$light-gray};
+      --border-color: #{$medium-gray};
+    }
+  }
+}
+
 body {
   font-family: $font-primary;
   background-color: $background-dark;

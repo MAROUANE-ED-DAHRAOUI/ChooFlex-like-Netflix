@@ -13,7 +13,6 @@ const HeroBanner = ({ type, onGenreChange }) => {
         setLoading(true);
         // Simply use the random endpoint which doesn't require auth
         const data = await moviesAPI.getRandom(type);
-        console.log('Fetched movie data:', data);
         setMovie(data);
       } catch (error) {
         console.error('Error fetching random movie:', error);
@@ -53,13 +52,11 @@ const HeroBanner = ({ type, onGenreChange }) => {
   const getBackgroundImage = () => {
     // Priority: imgTitle (backdrop) > img (poster) > imgSm (small) > TMDB paths > fallback
     if (movie.imgTitle) {
-      console.log('Using imgTitle:', movie.imgTitle);
       return movie.imgTitle;
     } else if (movie.img) {
-      console.log('Using img:', movie.img);
       return movie.img;
     } else if (movie.imgSm) {
-      console.log('Using imgSm:', movie.imgSm);
+      return movie.imgSm;
       return movie.imgSm;
     } else if (movie.backdrop_path) {
       console.log('Using backdrop_path:', movie.backdrop_path);

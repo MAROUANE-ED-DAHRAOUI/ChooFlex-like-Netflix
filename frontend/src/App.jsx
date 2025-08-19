@@ -5,7 +5,7 @@ import Watch from "./pages/watch/Watch";
 import Login from "./pages/login/Login";
 import Movies from "./pages/movies/Movies";
 import Series from "./pages/series/Series";
-import Profile from "./pages/profile/Profile";
+import Settings from "./pages/settings/Settings";
 import {
   BrowserRouter as Router,
   Routes,
@@ -37,7 +37,7 @@ const App = () => {
           <>
             <Route path="/movies" element={<Movies />} />
             <Route path="/series" element={<Series />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
             <Route path="/watch" element={<Watch />} />
           </>
         )}
