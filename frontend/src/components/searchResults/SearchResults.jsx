@@ -1,24 +1,11 @@
 import React from 'react';
 import MovieCard from '../movieCard/MovieCard';
+import { SearchResultsSkeleton } from '../skeletonLoader/SkeletonLoader';
 import './searchResults.scss';
 
 const SearchResults = ({ searchResults, isLoading, query, error }) => {
   if (isLoading) {
-    return (
-      <div className="search-results">
-        <div className="search-header">
-          <h2>Searching for "{query}"...</h2>
-        </div>
-        <div className="search-grid loading">
-          {[...Array(8)].map((_, index) => (
-            <div key={index} className="search-card-skeleton">
-              <div className="skeleton-image"></div>
-              <div className="skeleton-title"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <SearchResultsSkeleton count={8} />;
   }
 
   if (error) {

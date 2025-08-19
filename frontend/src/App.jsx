@@ -6,6 +6,7 @@ import Login from "./pages/login/Login";
 import Movies from "./pages/movies/Movies";
 import Series from "./pages/series/Series";
 import Settings from "./pages/settings/Settings";
+import QueryProvider from "./providers/QueryProvider";
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,30 +20,32 @@ const App = () => {
   const { user } = useContext(AuthContext);
   
   return (
-    <Router>
-      <Routes>
-        <Route 
-          path="/" 
-          element={user ? <Home /> : <Navigate to="/register" replace />} 
-        />
-        <Route 
-          path="/register" 
-          element={!user ? <Register /> : <Navigate to="/" replace />} 
-        />
-        <Route 
-          path="/login" 
-          element={!user ? <Login /> : <Navigate to="/" replace />} 
-        />
-        {user && (
-          <>
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/series" element={<Series />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/watch" element={<Watch />} />
-          </>
-        )}
-      </Routes>
-    </Router>
+    <QueryProvider>
+      <Router>
+        <Routes>
+          <Route 
+            path="/" 
+            element={user ? <Home /> : <Navigate to="/register" replace />} 
+          />
+          <Route 
+            path="/register" 
+            element={!user ? <Register /> : <Navigate to="/" replace />} 
+          />
+          <Route 
+            path="/login" 
+            element={!user ? <Login /> : <Navigate to="/" replace />} 
+          />
+          {user && (
+            <>
+              <Route path="/movies" element={<Movies />} />
+              <Route path="/series" element={<Series />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/watch" element={<Watch />} />
+            </>
+          )}
+        </Routes>
+      </Router>
+    </QueryProvider>
   );
 };
 

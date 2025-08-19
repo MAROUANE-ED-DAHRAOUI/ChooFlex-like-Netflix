@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import MovieCard from '../movieCard/MovieCard';
+import { ListContentSkeleton } from '../skeletonLoader/SkeletonLoader';
 import './movieRow.scss';
 
 const MovieRow = ({ title, movies, isLoading = false }) => {
@@ -53,13 +54,9 @@ const MovieRow = ({ title, movies, isLoading = false }) => {
   if (isLoading) {
     return (
       <div className="movie-row">
-        <h2 className="row-title loading-skeleton title"></h2>
+        <div className="row-title loading-skeleton"></div>
         <div className="row-container">
-          <div className="movies-grid">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="movie-card loading-skeleton card"></div>
-            ))}
-          </div>
+          <ListContentSkeleton movieCount={6} />
         </div>
       </div>
     );
@@ -94,7 +91,7 @@ const MovieRow = ({ title, movies, isLoading = false }) => {
         )}
 
         <div 
-          className="movies-grid"
+          className="movies-grid content-fade-in"
           ref={scrollContainerRef}
           onScroll={handleScroll}
         >

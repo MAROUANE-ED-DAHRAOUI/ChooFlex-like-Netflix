@@ -1,61 +1,59 @@
-import { useState, useEffect } from 'react';
-import { getMovieById } from '../../services/api';
+import { useMemo } from 'react';
+import { useMovies } from '../../hooks/useApi';
 import MovieRow from '../movieRow/MovieRow';
 import './list.scss';
 
 const List = ({ list }) => {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Extract movie IDs from list content
+  const movieIds = useMemo(() => {
+    if (!list?.content || list.content.length === 0) {
+      return [];
+    }
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      if (!list?.content || list.content.length === 0) {
-        setLoading(false);
-        return;
-      }
+    // Check if content is already populated with full movie objects
+    const firstItem = list.content[0];
+    if (firstItem && typeof firstItem === 'object' && firstItem.title) {
+      // Content is already populated, no need to fetch
+      return [];
+    }
+    
+    // Content contains only IDs, return them for fetching
+    return list.content;
+  }, [list?.content]);
 
-      try {
-        setLoading(true);
-        
-        // Check if content is already populated with full movie objects
-        const firstItem = list.content[0];
-        if (firstItem && typeof firstItem === 'object' && firstItem.title) {
-          // Content is already populated
-          setMovies(list.content);
-          setLoading(false);
-          return;
-        }
-        
-        // Content contains only IDs, need to fetch movie details
-        const moviePromises = list.content.map(async (movieId) => {
-          try {
-            return await getMovieById(movieId);
-          } catch (error) {
-            console.error(`Error fetching movie ${movieId}:`, error);
-            return null;
-          }
-        });
+  // Use React Query to fetch movies if needed
+  const {
+    data: fetchedMovies = [],
+    isLoading: moviesLoading
+  } = useMovies(movieIds, {
+    enabled: movieIds.length > 0
+  });
 
-        const movieResults = await Promise.all(moviePromises);
-        const validMovies = movieResults.filter(movie => movie !== null);
-        setMovies(validMovies);
-      } catch (error) {
-        console.error('Error fetching movies for list:', error);
-        setMovies([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Determine final movies array
+  const movies = useMemo(() => {
+    if (!list?.content || list.content.length === 0) {
+      return [];
+    }
 
-    fetchMovies();
-  }, [list]);
+    // If content is already populated with movie objects
+    const firstItem = list.content[0];
+    if (firstItem && typeof firstItem === 'object' && firstItem.title) {
+      return list.content;
+    }
+
+    // Use fetched movies
+    return fetchedMovies;
+  }, [list?.content, fetchedMovies]);
+
+  // Loading state: show loading if we need to fetch movies and they're loading
+  const isLoading = movieIds.length > 0 && moviesLoading;
 
   return (
     <div className="list">
       <MovieRow 
         title={list?.title || 'Untitled List'}
         movies={movies}
-        isLoading={loading}
+        isLoading={isLoading}
       />
     </div>
   );

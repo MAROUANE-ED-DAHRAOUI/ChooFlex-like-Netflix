@@ -10,6 +10,22 @@
     z-index: 1;
     padding-bottom: $spacing-20;
 
+    // Content fade-in animation
+    .content-fade-in {
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .error-message {
       @include flex-center;
       @include flex-column;
@@ -30,11 +46,20 @@
       button {
         @include button-primary;
         padding: $spacing-3 $spacing-6;
+        transition: all $transition-fast;
+
+        &:hover {
+          background: $primary-red-dark;
+          transform: translateY(-2px);
+        }
       }
     }
 
     .loading-lists {
       padding: $spacing-4 0;
+
+      // Add a subtle fade animation for loading state
+      animation: fadeIn 0.3s ease-in;
     }
 
     .content-lists {
@@ -44,34 +69,79 @@
     .no-content {
       @include flex-center;
       @include flex-column;
-      gap: $spacing-3;
+      gap: $spacing-4;
       padding: $spacing-12 $spacing-8;
       text-align: center;
       color: $light-gray;
 
       h3 {
-        font-size: $font-2xl;
         color: $white;
+        font-size: $font-xl;
         margin: 0;
       }
 
       p {
-        font-size: $font-lg;
         margin: 0;
-        max-width: 500px;
+        font-size: $font-md;
+        line-height: 1.5;
       }
 
-      @include mobile {
-        padding: $spacing-12 $spacing-4;
+      .retry-btn {
+        @include button-secondary;
+        padding: $spacing-3 $spacing-6;
+        margin-top: $spacing-4;
+        transition: all $transition-fast;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+      }
+    }
+
+    // Performance optimizations
+    .movies-grid {
+      // Enable hardware acceleration for smooth scrolling
+      transform: translateZ(0);
+      will-change: scroll-position;
+    }
+
+    // Responsive improvements
+    @include mobile {
+      .error-message {
+        margin: $spacing-4;
+        padding: $spacing-6;
+
+        p {
+          font-size: $font-md;
+        }
+      }
+
+      .no-content {
+        padding: $spacing-8 $spacing-4;
 
         h3 {
-          font-size: $font-xl;
+          font-size: $font-lg;
         }
 
         p {
-          font-size: $font-base;
+          font-size: $font-sm;
         }
       }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    // Smooth transitions for better UX
+    * {
+      transition: opacity $transition-normal ease-out;
     }
   }
 }
@@ -79,13 +149,4 @@
 // Animation for smooth content loading
 .home-content {
   animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }

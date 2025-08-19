@@ -1,45 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { PlayArrow, KeyboardArrowDown } from '@mui/icons-material';
-import { moviesAPI } from '../../services/api';
+import { useRandomMovie } from '../../hooks/useApi';
+import { FeaturedSkeleton } from '../skeletonLoader/SkeletonLoader';
 import './heroBanner.scss';
 
 const HeroBanner = ({ type, onGenreChange }) => {
-  const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [selectedGenre, setSelectedGenre] = useState('');
+  
+  // Use React Query for random movie
+  const { data: movie, isLoading, error, refetch } = useRandomMovie(type);
 
-  useEffect(() => {
-    const fetchRandomMovie = async () => {
-      try {
-        setLoading(true);
-        // Simply use the random endpoint which doesn't require auth
-        const data = await moviesAPI.getRandom(type);
-        setMovie(data);
-      } catch (error) {
-        console.error('Error fetching random movie:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRandomMovie();
-  }, [type]);
-
-  // Re-randomize when component mounts (navigation back to home)
-  useEffect(() => {
-    const fetchRandomMovie = async () => {
-      try {
-        const data = await moviesAPI.getRandom(type);
-        setMovie(data);
-      } catch (error) {
-        console.error('Error fetching random movie:', error);
-      }
-    };
-
-    // Only fetch if we already have a movie (to avoid double fetch on first load)
-    if (movie) {
-      fetchRandomMovie();
-    }
-  }, []); // Empty dependency array for mount-only effect
+  // Re-randomize movie (can be called from UI)
+  const handleRandomize = () => {
+    refetch();
+  };
 
   const handlePlay = () => {
     if (movie) {
@@ -80,23 +54,18 @@ const HeroBanner = ({ type, onGenreChange }) => {
     return '';
   };
 
-  if (loading) {
-    return (
-      <div className="hero-banner loading">
-        <div className="hero-content">
-          <div className="loading-skeleton title"></div>
-          <div className="loading-skeleton description"></div>
-          <div className="loading-skeleton buttons"></div>
-        </div>
-      </div>
-    );
+  if (isLoading) {
+    return <FeaturedSkeleton />;
   }
 
-  if (!movie) {
+  if (error || !movie) {
     return (
       <div className="hero-banner">
         <div className="hero-content">
           <h1>No content available</h1>
+          <button onClick={handleRandomize} className="retry-btn">
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -142,8 +111,11 @@ const HeroBanner = ({ type, onGenreChange }) => {
           {onGenreChange && (
             <div className="genre-filter">
               <select 
-                onChange={(e) => onGenreChange(e.target.value)}
-                defaultValue=""
+                value={selectedGenre}
+                onChange={(e) => {
+                  setSelectedGenre(e.target.value);
+                  onGenreChange(e.target.value);
+                }}
               >
                 <option value="">All Genres</option>
                 <option value="action">Action</option>

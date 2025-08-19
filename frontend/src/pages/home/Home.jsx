@@ -1,24 +1,20 @@
 import { useEffect, useState } from 'react';
-import { getLists, searchContent } from '../../services/api';
+import { useLists, useSearch, usePrefetch } from '../../hooks/useApi';
+import { usePrefetchService } from '../../hooks/usePrefetch';
 import Navbar from '../../components/navbar/Navbar';
 import Featured from '../../components/featured/Featured';
 import List from '../../components/list/List';
 import SearchResults from '../../components/searchResults/SearchResults';
+import { MovieRowSkeleton } from '../../components/skeletonLoader/SkeletonLoader';
 import { useDebounce } from '../../hooks/useDebounce';
 import './home.scss';
 
 const Home = ({ type }) => {
-  const [lists, setLists] = useState([]);
   const [genre, setGenre] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [heroKey, setHeroKey] = useState(0); // Key to force hero re-render
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [searchError, setSearchError] = useState(null);
   
   // Debounce search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -26,55 +22,72 @@ const Home = ({ type }) => {
   // Is searching flag
   const isSearching = searchQuery.trim().length > 0;
 
+  // Prefetch hook for background loading
+  const { prefetchLists, prefetchRandomMovie } = usePrefetch();
+  const { startBackgroundPrefetch } = usePrefetchService();
+
+  // Main lists query with React Query
+  const {
+    data: lists = [],
+    isLoading,
+    error,
+    refetch
+  } = useLists(type, genre, {
+    // Keep previous data while loading new data
+    keepPreviousData: true,
+    // Prefetch on mount
+    refetchOnMount: true
+  });
+
+  // Search query with React Query
+  const {
+    data: searchData,
+    isLoading: searchLoading,
+    error: searchError
+  } = useSearch(debouncedSearchQuery, {
+    enabled: isSearching
+  });
+
+  const searchResults = searchData?.results || [];
+
   // Force hero re-randomization when coming back to home
   useEffect(() => {
     setHeroKey(prev => prev + 1);
   }, [type]);
 
+  // Start background prefetching for better UX
   useEffect(() => {
-    const fetchLists = async () => {
+    startBackgroundPrefetch();
+  }, [startBackgroundPrefetch]);
+
+  // Prefetch data in the background for better UX
+  useEffect(() => {
+    const prefetchData = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        const data = await getLists(type, genre);
-        setLists(data || []);
-      } catch (err) {
-        console.error('Error fetching lists:', err);
-        setError('Failed to load content');
-      } finally {
-        setLoading(false);
+        // Prefetch different genre data in background
+        const genres = ['action', 'comedy', 'drama', 'thriller'];
+        const currentGenre = genre || '';
+        
+        // Prefetch other genres
+        const otherGenres = genres.filter(g => g !== currentGenre);
+        if (otherGenres.length > 0) {
+          // Prefetch one other genre
+          prefetchLists(type, otherGenres[0]);
+        }
+
+        // Prefetch random movie for hero
+        prefetchRandomMovie(type);
+      } catch (error) {
+        console.log('Background prefetch failed:', error);
       }
     };
 
-    fetchLists();
-  }, [type, genre]);
+    // Delay prefetch to not interfere with main loading
+    const timeoutId = setTimeout(prefetchData, 2000);
+    return () => clearTimeout(timeoutId);
+  }, [type, genre, prefetchLists, prefetchRandomMovie]);
 
-  // Search functionality
-  useEffect(() => {
-    const performSearch = async () => {
-      if (debouncedSearchQuery.trim() === '') {
-        setSearchResults([]);
-        setSearchLoading(false);
-        setSearchError(null);
-        return;
-      }
-
-      try {
-        setSearchLoading(true);
-        setSearchError(null);
-        const results = await searchContent(debouncedSearchQuery.trim());
-        setSearchResults(results.results || []);
-      } catch (err) {
-        console.error('Search error:', err);
-        setSearchError('Failed to search content');
-        setSearchResults([]);
-      } finally {
-        setSearchLoading(false);
-      }
-    };
-
-    performSearch();
-  }, [debouncedSearchQuery]);
+  // Search functionality is now handled by React Query hook above
 
   const handleGenreChange = (selectedGenre) => {
     setGenre(selectedGenre === '' ? null : selectedGenre);
@@ -86,8 +99,10 @@ const Home = ({ type }) => {
 
   const clearSearch = () => {
     setSearchQuery('');
-    setSearchResults([]);
-    setSearchError(null);
+  };
+
+  const handleRetry = () => {
+    refetch();
   };
 
   return (
@@ -114,23 +129,21 @@ const Home = ({ type }) => {
           <>
             {error && (
               <div className="error-message">
-                <p>{error}</p>
-                <button onClick={() => window.location.reload()}>
+                <p>Failed to load content</p>
+                <button onClick={handleRetry}>
                   Try Again
                 </button>
               </div>
             )}
 
-            {loading ? (
-              // Loading skeleton
+            {isLoading ? (
+              // Enhanced loading skeleton
               <div className="loading-lists">
-                {[...Array(4)].map((_, index) => (
-                  <List key={index} list={{ title: '', content: [] }} />
-                ))}
+                <MovieRowSkeleton count={4} />
               </div>
             ) : (
-              // Actual content
-              <div className="content-lists">
+              // Actual content with fade-in animation
+              <div className="content-lists content-fade-in">
                 {lists.length > 0 ? (
                   lists.map((list, index) => (
                     <List key={list._id || index} list={list} />
@@ -139,6 +152,9 @@ const Home = ({ type }) => {
                   <div className="no-content">
                     <h3>No content available</h3>
                     <p>Try changing the genre filter or check back later.</p>
+                    <button onClick={handleRetry} className="retry-btn">
+                      Refresh Content
+                    </button>
                   </div>
                 )}
               </div>

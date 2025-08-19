@@ -32,10 +32,12 @@
       height: 30px;
       width: 200px;
       border-radius: $radius-sm;
+      margin-bottom: $spacing-4;
 
       @include mobile {
         height: 24px;
         width: 150px;
+        margin-bottom: $spacing-3;
       }
     }
   }
