@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
@@ -246,7 +247,7 @@
     transition: background $transition-fast;
 
     &:hover {
-      background: darken($primary-red, 10%);
+      background: color.adjust($primary-red, $lightness: -10%);
     }
 
     svg {
@@ -562,7 +563,7 @@
     transition: all $transition-fast;
 
     &:hover:not(:disabled) {
-      background: darken($primary-red, 10%);
+      background: color.adjust($primary-red, $lightness: -10%);
       transform: translateY(-1px);
     }
 
@@ -591,7 +592,7 @@
     transition: all $transition-fast;
 
     &:hover {
-      background: darken($success-green, 10%);
+      background: color.adjust($success-green, $lightness: -10%);
     }
   }
 
@@ -609,7 +610,7 @@
     transition: all $transition-fast;
 
     &:hover {
-      background: darken($warning-orange, 10%);
+      background: color.adjust($warning-orange, $lightness: -10%);
     }
 
     svg {
@@ -631,7 +632,7 @@
     transition: all $transition-fast;
 
     &:hover {
-      background: darken($danger-red, 10%);
+      background: color.adjust($danger-red, $lightness: -10%);
     }
 
     svg {

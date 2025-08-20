@@ -1,4 +1,4 @@
-import { ArrowBackOutlined } from "@material-ui/icons";
+import { ArrowBackOutlined } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { moviesAPI } from "../../services/api";
