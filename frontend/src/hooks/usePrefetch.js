@@ -1,4 +1,3 @@
-import React from 'react';
 import { usePrefetch } from '../hooks/useApi';
 import { prefetchPopularContent } from '../utils/performance';
 
@@ -16,8 +15,6 @@ export const usePrefetchService = () => {
       // Wait a bit to not interfere with initial page load
       await new Promise(resolve => setTimeout(resolve, 3000));
 
-      console.log('Starting background prefetch...');
-
       // Prefetch popular content
       await prefetchPopularContent(prefetchHooks);
 
@@ -32,10 +29,9 @@ export const usePrefetchService = () => {
       ];
 
       await Promise.allSettled(prefetchPromises);
-      console.log('Background prefetch completed');
 
     } catch (error) {
-      console.log('Background prefetch failed:', error);
+      // Silent error handling for background prefetch
     }
   };
 
@@ -44,7 +40,7 @@ export const usePrefetchService = () => {
     try {
       await prefetchHooks.prefetchLists(type, genre);
     } catch (error) {
-      console.log('Interaction prefetch failed:', error);
+      // Silent error handling
     }
   };
 
@@ -53,7 +49,7 @@ export const usePrefetchService = () => {
     try {
       await prefetchHooks.prefetchMovie(movieId);
     } catch (error) {
-      console.log('Movie prefetch failed:', error);
+      // Silent error handling
     }
   };
 
