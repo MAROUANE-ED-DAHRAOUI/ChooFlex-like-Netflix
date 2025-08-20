@@ -151,7 +151,6 @@ router.get('/random', async (req, res) => {
     try {
         // First, let's check if we have any movies in the database
         const movieCount = await Movies.countDocuments();
-        console.log(`Total movies in database: ${movieCount}`);
         
         if (movieCount === 0) {
             // Return mock data if no movies in database

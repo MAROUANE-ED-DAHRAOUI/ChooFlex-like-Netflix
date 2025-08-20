@@ -94,7 +94,6 @@ router.get('/', async (req, res) => {
     try {
         // First, let's check if we have any lists in the database
         const listCount = await lists.countDocuments();
-        console.log(`Total lists in database: ${listCount}`);
         
         if (listCount === 0) {
             // Return mock data if no lists in database
