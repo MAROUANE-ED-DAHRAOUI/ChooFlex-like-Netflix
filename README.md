@@ -48,62 +48,96 @@ ChooFlex is a comprehensive streaming platform built with modern web technologie
 
 ```
 ChooFlex/
-├── 📂 backend/                 # Node.js Backend
-│   ├── 📂 middleware/          # Custom middleware
-│   │   ├── validateRegister.js # Registration validation
-│   │   └── verifyToken.js      # JWT token verification
-│   ├── 📂 models/              # Database models
-│   │   ├── list.js             # Content lists model
-│   │   ├── movie.js            # Movie/series model
-│   │   └── user.js             # User model
-│   ├── 📂 routes/              # API endpoints
-│   │   ├── auth.js             # Authentication routes
-│   │   ├── list.js             # Content lists routes
-│   │   ├── movies.js           # Movies/series routes
-│   │   ├── search.js           # Search functionality
-│   │   ├── series.js           # TV series routes
-│   │   └── users.js            # User management routes
-│   ├── .env                    # Environment variables
-│   ├── index.js                # Server entry point
-│   └── package.json            # Backend dependencies
-├── 📂 frontend/                # React Frontend
-│   ├── 📂 src/
-│   │   ├── 📂 authContext/     # Authentication context
-│   │   │   ├── apiCalls.js     # Auth API calls
-│   │   │   ├── AuthActions.js  # Auth action types
-│   │   │   ├── AuthContext.jsx # Auth context provider
-│   │   │   └── AuthReducer.js  # Auth state reducer
-│   │   ├── 📂 components/      # Reusable UI components
-│   │   │   ├── featured/       # Featured content banner
-│   │   │   ├── heroBanner/     # Hero section component
-│   │   │   ├── list/           # Content list component
-│   │   │   ├── listItem/       # Individual list items
-│   │   │   ├── movieCard/      # Movie/series cards
-│   │   │   ├── movieRow/       # Horizontal movie rows
-│   │   │   ├── navbar/         # Navigation bar
-│   │   │   ├── searchResults/  # Search results display
-│   │   │   └── skeletonLoader/ # Loading skeleton components
-│   │   ├── 📂 hooks/           # Custom React hooks
-│   │   │   ├── useApi.js       # API interaction hooks
-│   │   │   ├── useDebounce.js  # Debounced input hook
-│   │   │   └── usePrefetch.js  # Content prefetching
-│   │   ├── 📂 pages/           # Main application pages
-│   │   │   ├── home/           # Home page
-│   │   │   ├── login/          # Login page
-│   │   │   ├── movies/         # Movies browse page
-│   │   │   ├── register/       # Registration page
-│   │   │   ├── series/         # TV series page
-│   │   │   ├── settings/       # User settings page
-│   │   │   └── watch/          # Video player page
-│   │   ├── 📂 providers/       # Context providers
-│   │   ├── 📂 services/        # API service layer
-│   │   ├── 📂 styles/          # Global styles and variables
-│   │   └── 📂 utils/           # Utility functions
-│   ├── 📂 images/              # Static assets
-│   ├── index.html              # HTML entry point
-│   ├── package.json            # Frontend dependencies
-│   └── vite.config.js          # Vite configuration
-└── README.md                   # Project documentation
+├── 📂 backend/                        # Main Node.js Backend
+│   ├── 📂 middleware/                 # Custom middleware
+│   │   ├── validateRegister.js        # Registration validation
+│   │   └── verifyToken.js             # JWT token verification
+│   ├── 📂 models/                     # Database models
+│   │   ├── list.js                    # Content lists model
+│   │   ├── movie.js                   # Movie/series model
+│   │   └── user.js                    # User model
+│   ├── 📂 routes/                     # API endpoints
+│   │   ├── auth.js                    # Authentication routes
+│   │   ├── list.js                    # Content lists routes
+│   │   ├── movies.js                  # Movies/series routes
+│   │   ├── search.js                  # Search functionality
+│   │   ├── series.js                  # TV series routes
+│   │   └── users.js                   # User management routes
+│   ├── .env                           # Environment variables
+│   ├── index.js                       # Server entry point
+│   └── package.json                   # Backend dependencies
+├── 📂 admin-dashboard-backend/        # Admin Dashboard Backend
+│   ├── 📂 controllers/                # Business logic controllers
+│   ├── 📂 middleware/                 # Authentication middleware
+│   ├── 📂 routes/                     # Admin API endpoints
+│   ├── 📂 uploads/                    # File upload storage
+│   ├── server.js                      # Admin server entry point
+│   └── package.json                   # Admin backend dependencies
+├── 📂 frontend/                       # All Frontend Applications
+│   ├── 📂 main-app/                   # Main ChooFlex App (Customer-facing)
+│   │   ├── 📂 src/
+│   │   │   ├── 📂 authContext/        # Authentication context
+│   │   │   │   ├── apiCalls.js        # Auth API calls
+│   │   │   │   ├── AuthActions.js     # Auth action types
+│   │   │   │   ├── AuthContext.jsx    # Auth context provider
+│   │   │   │   └── AuthReducer.js     # Auth state reducer
+│   │   │   ├── 📂 components/         # Reusable UI components
+│   │   │   │   ├── featured/          # Featured content banner
+│   │   │   │   ├── heroBanner/        # Hero section component
+│   │   │   │   ├── list/              # Content list component
+│   │   │   │   ├── listItem/          # Individual list items
+│   │   │   │   ├── movieCard/         # Movie/series cards
+│   │   │   │   ├── movieRow/          # Horizontal movie rows
+│   │   │   │   ├── navbar/            # Navigation bar
+│   │   │   │   ├── searchResults/     # Search results display
+│   │   │   │   └── skeletonLoader/    # Loading skeleton components
+│   │   │   ├── 📂 hooks/              # Custom React hooks
+│   │   │   │   ├── useApi.js          # API interaction hooks
+│   │   │   │   ├── useDebounce.js     # Debounced input hook
+│   │   │   │   └── usePrefetch.js     # Content prefetching
+│   │   │   ├── 📂 pages/              # Main application pages
+│   │   │   │   ├── home/              # Home page
+│   │   │   │   ├── login/             # Login page
+│   │   │   │   ├── movies/            # Movies browse page
+│   │   │   │   ├── register/          # Registration page
+│   │   │   │   ├── series/            # TV series page
+│   │   │   │   ├── settings/          # User settings page
+│   │   │   │   └── watch/             # Video player page
+│   │   │   ├── 📂 providers/          # Context providers
+│   │   │   ├── 📂 services/           # API service layer
+│   │   │   ├── 📂 styles/             # Global styles and variables
+│   │   │   └── 📂 utils/              # Utility functions
+│   │   ├── 📂 images/                 # Static assets
+│   │   ├── index.html                 # HTML entry point
+│   │   ├── package.json               # Frontend dependencies
+│   │   └── vite.config.js             # Vite configuration
+│   ├── 📂 admin-dashboard-app/        # Admin Dashboard (Management Interface)
+│   │   ├── 📂 src/
+│   │   │   ├── 📂 components/         # Dashboard UI components
+│   │   │   │   ├── Button.jsx         # Reusable button component
+│   │   │   │   ├── Header.jsx         # Dashboard header
+│   │   │   │   ├── Layout.jsx         # Main layout wrapper
+│   │   │   │   ├── LoadingSpinner.jsx # Loading spinner
+│   │   │   │   ├── Modal.jsx          # Modal component
+│   │   │   │   ├── ProtectedRoute.jsx # Route protection
+│   │   │   │   ├── Sidebar.jsx        # Navigation sidebar
+│   │   │   │   └── StatsCard.jsx      # Statistics cards
+│   │   │   ├── 📂 pages/              # Dashboard pages
+│   │   │   │   ├── Analytics.jsx      # Analytics dashboard
+│   │   │   │   ├── ContentManagement.jsx # Content management
+│   │   │   │   ├── Dashboard.jsx      # Main dashboard
+│   │   │   │   ├── Login.jsx          # Admin login
+│   │   │   │   ├── Settings.jsx       # System settings
+│   │   │   │   └── UserManagement.jsx # User management
+│   │   │   ├── 📂 services/           # Admin API services
+│   │   │   ├── 📂 styles/             # Dashboard styles
+│   │   │   └── 📂 utils/              # Dashboard utilities
+│   │   ├── 📂 public/                 # Public assets
+│   │   ├── 📂 build/                  # Production build
+│   │   ├── package.json               # Dashboard dependencies
+│   │   └── README.md                  # Dashboard documentation
+│   └── README.md                      # Frontend overview
+└── README.md                          # Project documentation
 ```
 
 ## � Installation & Setup
@@ -150,9 +184,11 @@ ChooFlex/
 
 ### 🎨 Frontend Setup
 
-1. **Navigate to frontend directory**
+#### Main Application
+
+1. **Navigate to main app directory**
    ```bash
-   cd ../frontend
+   cd ../frontend/main-app
    ```
 
 2. **Install dependencies**
@@ -165,7 +201,45 @@ ChooFlex/
    npm run dev
    ```
    
-   The frontend will run on `http://localhost:5173`
+   The main app will run on `http://localhost:5173`
+
+#### Admin Dashboard
+
+1. **Navigate to admin dashboard directory**
+   ```bash
+   cd ../admin-dashboard-app
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm start
+   ```
+   
+   The admin dashboard will run on `http://localhost:3000`
+
+### ⚙️ Admin Dashboard Backend Setup
+
+1. **Navigate to admin backend directory**
+   ```bash
+   cd ../../admin-dashboard-backend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start the admin backend server**
+   ```bash
+   npm start
+   ```
+   
+   The admin backend will run on `http://localhost:5000`
 
 ### 📊 Database Setup
 

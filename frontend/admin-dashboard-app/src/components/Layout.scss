@@ -1,0 +1,33 @@
+@import '../styles/global.scss';
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.layout-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px;
+  transition: margin-left var(--transition-normal);
+  
+  @media (max-width: 1024px) {
+    margin-left: 0;
+  }
+}
+
+.layout-content {
+  flex: 1;
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+  
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+  
+  @media (max-width: 480px) {
+    padding: var(--spacing-md);
+  }
+}
