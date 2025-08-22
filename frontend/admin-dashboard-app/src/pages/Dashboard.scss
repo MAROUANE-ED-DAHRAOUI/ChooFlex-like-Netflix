@@ -1,6 +1,12 @@
 @import '../styles/global.scss';
 
 .dashboard {
+  padding: var(--spacing-xl);
+  
+  @media (max-width: 768px) {
+    padding: var(--spacing-lg);
+  }
+  
   .page-header {
     margin-bottom: var(--spacing-xxl);
     
@@ -8,7 +14,8 @@
       font-size: 2rem;
       font-weight: 700;
       color: var(--text-primary);
-      margin-bottom: var(--spacing-xs);
+      margin: 0 0 var(--spacing-sm) 0;
+      letter-spacing: -0.025em;
     }
     
     p {
@@ -19,32 +26,62 @@
   }
 }
 
-.dashboard-header {
-  margin-bottom: var(--spacing-xxl);
-  
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
-  }
-  
-  p {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    margin: 0;
-  }
-}
-
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: var(--spacing-xl);
   margin-bottom: var(--spacing-xxl);
   
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-lg);
+  }
+}
+
+.content-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xxl);
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recent-content,
+.activity-feed {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-lg);
+    
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+    }
+    
+    .view-all {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius-md);
+      transition: all var(--transition-fast);
+      
+      &:hover {
+        background: rgba(229, 9, 20, 0.1);
+      }
+    }
   }
 }
 

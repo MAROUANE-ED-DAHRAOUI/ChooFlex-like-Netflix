@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiUsers, FiPlay, FiActivity, FiEye, FiTrendingUp, FiClock } from 'react-icons/fi';
 import { analyticsAPI } from '../services/api';
 import StatsCard from '../components/StatsCard';
@@ -7,6 +8,7 @@ import { formatNumber, formatDate } from '../utils/helpers';
 import './Dashboard.scss';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [topContent, setTopContent] = useState([]);
   const [activeUsers, setActiveUsers] = useState([]);
@@ -20,24 +22,29 @@ const Dashboard = () => {
     try {
       setLoading(true);
       
-      // Fetch all dashboard data
-      const [statsRes, topContentRes, activeUsersRes] = await Promise.allSettled([
-        analyticsAPI.getStats(),
-        analyticsAPI.getTopContent({ limit: 5 }),
-        analyticsAPI.getActiveUsers({ limit: 5 })
+      // For demo purposes, use mock data since backend APIs don't exist yet
+      setStats({
+        users: { total: 2847, new: 125, active: 1230 },
+        content: { total: 1250, movies: 850, series: 400 },
+        activity: { totalViews: 125430, dailyViews: 3420, avgSessionTime: 45 }
+      });
+
+      setTopContent([
+        { id: 1, title: 'Inception', type: 'movie', genre: 'Sci-Fi', year: 2010, views: 15420, rating: 8.8 },
+        { id: 2, title: 'Breaking Bad', type: 'series', genre: 'Drama', year: 2008, views: 28930, rating: 9.5 },
+        { id: 3, title: 'The Dark Knight', type: 'movie', genre: 'Action', year: 2008, views: 21870, rating: 9.0 },
+        { id: 4, title: 'Stranger Things', type: 'series', genre: 'Sci-Fi', year: 2016, views: 19650, rating: 8.7 },
+        { id: 5, title: 'The Godfather', type: 'movie', genre: 'Drama', year: 1972, views: 17890, rating: 9.2 }
       ]);
 
-      if (statsRes.status === 'fulfilled') {
-        setStats(statsRes.value.data);
-      }
-      
-      if (topContentRes.status === 'fulfilled') {
-        setTopContent(topContentRes.value.data);
-      }
-      
-      if (activeUsersRes.status === 'fulfilled') {
-        setActiveUsers(activeUsersRes.value.data);
-      }
+      setActiveUsers([
+        { id: 1, username: 'john_doe', sessionsToday: 3, totalWatchTime: 120, lastActive: new Date().toISOString() },
+        { id: 2, username: 'jane_smith', sessionsToday: 2, totalWatchTime: 85, lastActive: new Date(Date.now() - 3600000).toISOString() },
+        { id: 3, username: 'movie_lover', sessionsToday: 5, totalWatchTime: 200, lastActive: new Date(Date.now() - 7200000).toISOString() },
+        { id: 4, username: 'series_fan', sessionsToday: 1, totalWatchTime: 60, lastActive: new Date(Date.now() - 10800000).toISOString() },
+        { id: 5, username: 'casual_viewer', sessionsToday: 2, totalWatchTime: 45, lastActive: new Date(Date.now() - 14400000).toISOString() }
+      ]);
+
     } catch (error) {
       console.error('Dashboard data fetch error:', error);
     } finally {
@@ -203,19 +210,19 @@ const Dashboard = () => {
           </div>
           <div className="card-body">
             <div className="actions-grid">
-              <button className="action-btn" onClick={() => window.location.href = '/users'}>
+              <button className="action-btn" onClick={() => navigate('/users')}>
                 <FiUsers />
                 <span>Manage Users</span>
               </button>
-              <button className="action-btn" onClick={() => window.location.href = '/content'}>
+              <button className="action-btn" onClick={() => navigate('/content')}>
                 <FiPlay />
                 <span>Add Content</span>
               </button>
-              <button className="action-btn" onClick={() => window.location.href = '/analytics'}>
+              <button className="action-btn" onClick={() => navigate('/analytics')}>
                 <FiTrendingUp />
                 <span>View Analytics</span>
               </button>
-              <button className="action-btn" onClick={() => window.location.href = '/settings'}>
+              <button className="action-btn" onClick={() => navigate('/settings')}>
                 <FiActivity />
                 <span>Settings</span>
               </button>

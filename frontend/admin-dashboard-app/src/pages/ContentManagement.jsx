@@ -32,19 +32,8 @@ const ContentManagement = () => {
   const fetchContent = async () => {
     try {
       setLoading(true);
-      const params = {
-        search: searchTerm,
-        type: filters.type,
-        genre: filters.genre,
-        featured: filters.featured,
-        limit: 50
-      };
       
-      const response = await contentAPI.getAll(params);
-      setContent(response.data.content || []);
-    } catch (error) {
-      console.error('Fetch content error:', error);
-      // Set mock data for demo
+      // For demo purposes, use mock data since backend APIs don't exist yet
       setContent([
         {
           id: 1,
@@ -86,8 +75,52 @@ const ContentManagement = () => {
           createdAt: new Date(Date.now() - 172800000).toISOString(),
           views: 21870,
           thumbnail: '/api/placeholder/300/400'
+        },
+        {
+          id: 4,
+          title: 'Stranger Things',
+          type: 'series',
+          genre: 'Sci-Fi',
+          year: 2016,
+          seasons: 4,
+          episodes: 42,
+          rating: 8.7,
+          featured: false,
+          createdAt: new Date(Date.now() - 259200000).toISOString(),
+          views: 19650,
+          thumbnail: '/api/placeholder/300/400'
+        },
+        {
+          id: 5,
+          title: 'The Godfather',
+          type: 'movie',
+          genre: 'Drama',
+          year: 1972,
+          duration: 175,
+          rating: 9.2,
+          featured: true,
+          createdAt: new Date(Date.now() - 345600000).toISOString(),
+          views: 17890,
+          thumbnail: '/api/placeholder/300/400'
+        },
+        {
+          id: 6,
+          title: 'Game of Thrones',
+          type: 'series',
+          genre: 'Fantasy',
+          year: 2011,
+          seasons: 8,
+          episodes: 73,
+          rating: 8.5,
+          featured: false,
+          createdAt: new Date(Date.now() - 432000000).toISOString(),
+          views: 24500,
+          thumbnail: '/api/placeholder/300/400'
         }
       ]);
+      
+    } catch (error) {
+      console.error('Fetch content error:', error);
     } finally {
       setLoading(false);
     }
@@ -95,24 +128,41 @@ const ContentManagement = () => {
 
   const handleContentAction = async (action, contentItem) => {
     try {
+      // For demo purposes, simulate the action without API calls
       switch (action) {
         case 'feature':
-          await contentAPI.setFeatured(contentItem.id, !contentItem.featured);
+          // Update the local state to reflect the change
+          setContent(prevContent => 
+            prevContent.map(item => 
+              item.id === contentItem.id 
+                ? { ...item, featured: !item.featured }
+                : item
+            )
+          );
           toast.success(`${contentItem.title} ${contentItem.featured ? 'removed from' : 'added to'} featured content`);
           break;
         case 'delete':
-          await contentAPI.delete(contentItem.id);
+          // Remove from local state
+          setContent(prevContent => 
+            prevContent.filter(item => item.id !== contentItem.id)
+          );
           toast.success(`${contentItem.title} has been deleted`);
+          break;
+        case 'edit':
+          toast.success(`Edit mode for ${contentItem.title} (demo)`);
+          break;
+        case 'create':
+          toast.success('Create content functionality (demo)');
           break;
         default:
           break;
       }
       
-      fetchContent();
       setShowModal(false);
       setSelectedContent(null);
     } catch (error) {
       console.error(`${action} content error:`, error);
+      toast.error('Action failed');
     }
   };
 

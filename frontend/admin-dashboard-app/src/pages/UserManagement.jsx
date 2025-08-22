@@ -32,18 +32,8 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const params = {
-        search: searchTerm,
-        status: filters.status,
-        sort: filters.sort,
-        limit: 50
-      };
       
-      const response = await usersAPI.getAll(params);
-      setUsers(response.data.users || []);
-    } catch (error) {
-      console.error('Fetch users error:', error);
-      // Set mock data for demo
+      // For demo purposes, use mock data since backend APIs don't exist yet
       setUsers([
         {
           id: 1,
@@ -74,8 +64,41 @@ const UserManagement = () => {
           status: 'banned',
           totalWatchTime: 45,
           favoritesCount: 3
+        },
+        {
+          id: 4,
+          username: 'moviefan',
+          email: 'moviefan@example.com',
+          createdAt: new Date(Date.now() - 259200000).toISOString(),
+          lastLogin: new Date(Date.now() - 3600000).toISOString(),
+          status: 'active',
+          totalWatchTime: 200,
+          favoritesCount: 25
+        },
+        {
+          id: 5,
+          username: 'seriesbinger',
+          email: 'binger@example.com',
+          createdAt: new Date(Date.now() - 345600000).toISOString(),
+          lastLogin: new Date(Date.now() - 1800000).toISOString(),
+          status: 'active',
+          totalWatchTime: 350,
+          favoritesCount: 40
+        },
+        {
+          id: 6,
+          username: 'inactiveuser',
+          email: 'inactive@example.com',
+          createdAt: new Date(Date.now() - 432000000).toISOString(),
+          lastLogin: new Date(Date.now() - 604800000).toISOString(),
+          status: 'inactive',
+          totalWatchTime: 15,
+          favoritesCount: 2
         }
       ]);
+      
+    } catch (error) {
+      console.error('Fetch users error:', error);
     } finally {
       setLoading(false);
     }
@@ -83,28 +106,52 @@ const UserManagement = () => {
 
   const handleUserAction = async (action, user) => {
     try {
+      // For demo purposes, simulate the action without API calls
       switch (action) {
         case 'ban':
-          await usersAPI.ban(user.id);
+          // Update local state
+          setUsers(prevUsers => 
+            prevUsers.map(u => 
+              u.id === user.id 
+                ? { ...u, status: 'banned' }
+                : u
+            )
+          );
           toast.success(`User ${user.username} has been banned`);
           break;
         case 'unban':
-          await usersAPI.unban(user.id);
+          // Update local state
+          setUsers(prevUsers => 
+            prevUsers.map(u => 
+              u.id === user.id 
+                ? { ...u, status: 'active' }
+                : u
+            )
+          );
           toast.success(`User ${user.username} has been unbanned`);
           break;
         case 'delete':
-          await usersAPI.delete(user.id);
+          // Remove from local state
+          setUsers(prevUsers => 
+            prevUsers.filter(u => u.id !== user.id)
+          );
           toast.success(`User ${user.username} has been deleted`);
+          break;
+        case 'edit':
+          toast.success(`Edit mode for ${user.username} (demo)`);
+          break;
+        case 'create':
+          toast.success('Create user functionality (demo)');
           break;
         default:
           break;
       }
       
-      fetchUsers();
       setShowModal(false);
       setSelectedUser(null);
     } catch (error) {
       console.error(`${action} user error:`, error);
+      toast.error('Action failed');
     }
   };
 
@@ -115,13 +162,7 @@ const UserManagement = () => {
   };
 
   const getStatusBadge = (status) => {
-    const statusClasses = {
-      active: 'status-active',
-      banned: 'status-banned',
-      inactive: 'status-inactive'
-    };
-    
-    return <span className={`status-badge ${statusClasses[status]}`}>{status}</span>;
+    return <span className={`status-badge ${status}`}>{status}</span>;
   };
 
   const filteredUsers = users.filter(user => {

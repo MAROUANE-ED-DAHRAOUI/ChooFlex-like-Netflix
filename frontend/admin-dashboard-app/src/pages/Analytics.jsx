@@ -22,62 +22,39 @@ const Analytics = () => {
     try {
       setLoading(true);
       
-      const [statsRes, viewStatsRes, userStatsRes, topContentRes] = await Promise.allSettled([
-        analyticsAPI.getStats(),
-        analyticsAPI.getViewStats({ range: timeRange }),
-        analyticsAPI.getUserStats({ range: timeRange }),
-        analyticsAPI.getTopContent({ range: timeRange, limit: 10 })
+      // For demo purposes, use mock data since backend APIs don't exist yet
+      setStats({
+        totalViews: 125430,
+        totalUsers: 2847,
+        totalContent: 1250,
+        avgSessionTime: 45,
+        dailyActiveUsers: 1230,
+        monthlyGrowth: 15.2
+      });
+
+      setViewStats([
+        { date: '2024-01-15', views: 1200, users: 450 },
+        { date: '2024-01-16', views: 1350, users: 520 },
+        { date: '2024-01-17', views: 1100, users: 410 },
+        { date: '2024-01-18', views: 1480, users: 580 },
+        { date: '2024-01-19', views: 1620, users: 640 },
+        { date: '2024-01-20', views: 1750, users: 720 },
+        { date: '2024-01-21', views: 1580, users: 630 }
       ]);
 
-      if (statsRes.status === 'fulfilled') {
-        setStats(statsRes.value.data);
-      }
-      
-      if (viewStatsRes.status === 'fulfilled') {
-        setViewStats(viewStatsRes.value.data);
-      }
-      
-      if (userStatsRes.status === 'fulfilled') {
-        setUserStats(userStatsRes.value.data);
-      }
-      
-      if (topContentRes.status === 'fulfilled') {
-        setTopContent(topContentRes.value.data);
-      }
+      setTopContent([
+        { id: 1, title: 'Inception', type: 'movie', views: 15420, rating: 8.8 },
+        { id: 2, title: 'Breaking Bad', type: 'series', views: 28930, rating: 9.5 },
+        { id: 3, title: 'The Dark Knight', type: 'movie', views: 21870, rating: 9.0 },
+        { id: 4, title: 'Stranger Things', type: 'series', views: 19650, rating: 8.7 },
+        { id: 5, title: 'Pulp Fiction', type: 'movie', views: 17890, rating: 8.9 },
+        { id: 6, title: 'Game of Thrones', type: 'series', views: 24500, rating: 8.5 },
+        { id: 7, title: 'The Godfather', type: 'movie', views: 16750, rating: 9.2 },
+        { id: 8, title: 'Friends', type: 'series', views: 22100, rating: 8.9 },
+        { id: 9, title: 'The Matrix', type: 'movie', views: 18650, rating: 8.7 },
+        { id: 10, title: 'The Office', type: 'series', views: 20400, rating: 8.8 }
+      ]);
 
-      // Mock data for demo
-      if (!stats) {
-        setStats({
-          totalViews: 125430,
-          totalUsers: 2847,
-          totalContent: 1250,
-          avgSessionTime: 45,
-          dailyActiveUsers: 1230,
-          monthlyGrowth: 15.2
-        });
-      }
-
-      if (viewStats.length === 0) {
-        setViewStats([
-          { date: '2024-01-15', views: 1200, users: 450 },
-          { date: '2024-01-16', views: 1350, users: 520 },
-          { date: '2024-01-17', views: 1100, users: 410 },
-          { date: '2024-01-18', views: 1480, users: 580 },
-          { date: '2024-01-19', views: 1620, users: 640 },
-          { date: '2024-01-20', views: 1750, users: 720 },
-          { date: '2024-01-21', views: 1580, users: 630 }
-        ]);
-      }
-
-      if (topContent.length === 0) {
-        setTopContent([
-          { id: 1, title: 'Inception', type: 'movie', views: 15420, rating: 8.8 },
-          { id: 2, title: 'Breaking Bad', type: 'series', views: 28930, rating: 9.5 },
-          { id: 3, title: 'The Dark Knight', type: 'movie', views: 21870, rating: 9.0 },
-          { id: 4, title: 'Stranger Things', type: 'series', views: 19650, rating: 8.7 },
-          { id: 5, title: 'Pulp Fiction', type: 'movie', views: 17890, rating: 8.9 }
-        ]);
-      }
     } catch (error) {
       console.error('Analytics fetch error:', error);
     } finally {
