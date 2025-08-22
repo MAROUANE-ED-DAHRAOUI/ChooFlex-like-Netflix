@@ -6,7 +6,10 @@ import Login from "./pages/login/Login";
 import Movies from "./pages/movies/Movies";
 import Series from "./pages/series/Series";
 import Settings from "./pages/settings/Settings";
+import MyList from "./pages/myList/MyList";
 import QueryProvider from "./providers/QueryProvider";
+import { MyListProvider } from "./hooks/useMyList.jsx";
+import { LikesProvider } from "./hooks/useLikes.jsx";
 import {
   BrowserRouter as Router,
   Routes,
@@ -21,30 +24,35 @@ const App = () => {
   
   return (
     <QueryProvider>
-      <Router>
-        <Routes>
-          <Route 
-            path="/" 
-            element={user ? <Home /> : <Navigate to="/register" replace />} 
-          />
-          <Route 
-            path="/register" 
-            element={!user ? <Register /> : <Navigate to="/" replace />} 
-          />
-          <Route 
-            path="/login" 
-            element={!user ? <Login /> : <Navigate to="/" replace />} 
-          />
-          {user && (
-            <>
-              <Route path="/movies" element={<Movies />} />
-              <Route path="/series" element={<Series />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/watch" element={<Watch />} />
-            </>
-          )}
-        </Routes>
-      </Router>
+      <MyListProvider>
+        <LikesProvider>
+          <Router>
+            <Routes>
+              <Route 
+                path="/" 
+                element={user ? <Home /> : <Navigate to="/register" replace />} 
+              />
+              <Route 
+                path="/register" 
+                element={!user ? <Register /> : <Navigate to="/" replace />} 
+              />
+              <Route 
+                path="/login" 
+                element={!user ? <Login /> : <Navigate to="/" replace />} 
+              />
+              {user && (
+                <>
+                  <Route path="/movies" element={<Movies />} />
+                  <Route path="/series" element={<Series />} />
+                  <Route path="/my-list" element={<MyList />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/watch" element={<Watch />} />
+                </>
+              )}
+            </Routes>
+          </Router>
+        </LikesProvider>
+      </MyListProvider>
     </QueryProvider>
   );
 };

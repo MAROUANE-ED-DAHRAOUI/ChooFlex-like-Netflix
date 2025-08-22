@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PlayArrow, KeyboardArrowDown } from '@mui/icons-material';
 import { useRandomMovie } from '../../hooks/useApi';
 import { FeaturedSkeleton } from '../skeletonLoader/SkeletonLoader';
@@ -7,8 +7,18 @@ import './heroBanner.scss';
 const HeroBanner = ({ type, onGenreChange }) => {
   const [selectedGenre, setSelectedGenre] = useState('');
   
-  // Use React Query for random movie
-  const { data: movie, isLoading, error, refetch } = useRandomMovie(type);
+  // Use React Query for random movie with forced refetch on mount
+  const { data: movie, isLoading, error, refetch } = useRandomMovie(type, {
+    // Force refetch when component mounts (due to key change)
+    refetchOnMount: 'always',
+    // Reduce stale time so it's more likely to refetch
+    staleTime: 0
+  });
+
+  // Force refetch on component mount (when key changes from Home)
+  useEffect(() => {
+    refetch();
+  }, []); // Empty dependency array means this runs once on mount
 
   // Re-randomize movie (can be called from UI)
   const handleRandomize = () => {

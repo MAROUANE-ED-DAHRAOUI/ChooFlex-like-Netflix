@@ -1,13 +1,21 @@
 import { useState } from 'react';
-import { PlayArrow, Add, ThumbUpAlt, KeyboardArrowDown } from '@mui/icons-material';
+import { PlayArrow, Add, Check, ThumbUpAlt, ThumbUp, Remove } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useMyList } from '../../hooks/useMyList.jsx';
+import { useLikes } from '../../hooks/useLikes.jsx';
 import './movieCard.scss';
 
-const MovieCard = ({ movie, index }) => {
+const MovieCard = ({ movie, index, showRemoveOption = false }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
+  const { addToList, removeFromList, isInList, toggleInList } = useMyList();
+  const { isLiked, toggleLike } = useLikes();
+
+  // Check if movie is in user's list and liked
+  const inMyList = isInList(movie._id);
+  const movieIsLiked = isLiked(movie._id);
 
   const handlePlay = (e) => {
     e.stopPropagation();
@@ -16,20 +24,30 @@ const MovieCard = ({ movie, index }) => {
 
   const handleAddToList = (e) => {
     e.stopPropagation();
-    // Add to list functionality
-    console.log('Add to list:', movie.title);
+    
+    if (showRemoveOption) {
+      // If we're on My List page, remove from list
+      removeFromList(movie._id);
+    } else {
+      // Toggle add/remove functionality
+      const added = toggleInList(movie);
+      if (added) {
+        console.log('✅ Added to My List:', movie.title);
+        // Could show a toast notification here
+      } else {
+        console.log('❌ Removed from My List:', movie.title);
+      }
+    }
   };
 
   const handleLike = (e) => {
     e.stopPropagation();
-    // Like functionality
-    console.log('Like:', movie.title);
-  };
-
-  const handleMoreInfo = (e) => {
-    e.stopPropagation();
-    // More info functionality - could open a modal or navigate to details
-    console.log('More info:', movie.title);
+    const liked = toggleLike(movie._id);
+    if (liked) {
+      console.log('👍 Liked:', movie.title);
+    } else {
+      console.log('👎 Unliked:', movie.title);
+    }
   };
 
   const handleCardClick = () => {
@@ -141,27 +159,19 @@ const MovieCard = ({ movie, index }) => {
           </button>
           
           <button 
-            className="action-btn secondary" 
+            className={`action-btn ${inMyList ? 'in-list' : 'secondary'}`} 
             onClick={handleAddToList}
-            title="Add to My List"
+            title={showRemoveOption ? 'Remove from My List' : inMyList ? 'Remove from My List' : 'Add to My List'}
           >
-            <Add />
+            {showRemoveOption ? <Remove /> : inMyList ? <Check /> : <Add />}
           </button>
           
           <button 
-            className="action-btn secondary" 
+            className={`action-btn ${movieIsLiked ? 'liked' : 'secondary'}`} 
             onClick={handleLike}
-            title="Like"
+            title={movieIsLiked ? 'Unlike' : 'Like'}
           >
-            <ThumbUpAlt />
-          </button>
-          
-          <button 
-            className="action-btn secondary" 
-            onClick={handleMoreInfo}
-            title="More Info"
-          >
-            <KeyboardArrowDown />
+            {movieIsLiked ? <ThumbUp /> : <ThumbUpAlt />}
           </button>
         </div>
       </div>

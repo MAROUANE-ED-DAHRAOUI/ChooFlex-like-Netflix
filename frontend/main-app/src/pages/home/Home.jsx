@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useLists, useSearch, usePrefetch } from '../../hooks/useApi';
 import { usePrefetchService } from '../../hooks/usePrefetch';
 import Navbar from '../../components/navbar/Navbar';
@@ -10,6 +11,7 @@ import { useDebounce } from '../../hooks/useDebounce';
 import './home.scss';
 
 const Home = ({ type }) => {
+  const location = useLocation();
   const [genre, setGenre] = useState(null);
   const [heroKey, setHeroKey] = useState(0); // Key to force hero re-render
   
@@ -54,6 +56,13 @@ const Home = ({ type }) => {
   useEffect(() => {
     setHeroKey(prev => prev + 1);
   }, [type]);
+
+  // Force hero re-randomization when navigating to Home page
+  useEffect(() => {
+    // Increment heroKey whenever the user navigates to the Home page
+    // This will force the Featured component to remount with a new key
+    setHeroKey(prev => prev + 1);
+  }, [location.pathname]); // This triggers when the pathname changes
 
   // Start background prefetching for better UX
   useEffect(() => {

@@ -242,6 +242,28 @@
           }
         }
 
+        &.in-list {
+          background: $success-green;
+          border-color: $success-green;
+          color: $white;
+
+          &:hover {
+            background: darken($success-green, 10%);
+            border-color: darken($success-green, 10%);
+          }
+        }
+
+        &.liked {
+          background: $primary-red;
+          border-color: $primary-red;
+          color: $white;
+
+          &:hover {
+            background: $primary-red-dark;
+            border-color: $primary-red-dark;
+          }
+        }
+
         svg {
           font-size: 16px;
         }
