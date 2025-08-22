@@ -4,7 +4,7 @@ import {
   FiHome, 
   FiUsers, 
   FiPlay, 
-  FiBarChart3, 
+  FiBarChart2, 
   FiSettings, 
   FiLogOut 
 } from 'react-icons/fi';
@@ -21,7 +21,7 @@ const Sidebar = () => {
     { path: '/', icon: FiHome, label: 'Dashboard' },
     { path: '/users', icon: FiUsers, label: 'Users' },
     { path: '/content', icon: FiPlay, label: 'Content' },
-    { path: '/analytics', icon: FiBarChart3, label: 'Analytics' },
+    { path: '/analytics', icon: FiBarChart2, label: 'Analytics' },
     { path: '/settings', icon: FiSettings, label: 'Settings' },
   ];
 
