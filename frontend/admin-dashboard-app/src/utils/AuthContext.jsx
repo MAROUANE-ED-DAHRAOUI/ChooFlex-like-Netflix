@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import api from '../services/api';
+import { authAPI } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('adminToken');
       if (token) {
         // Verify token with backend
-        const response = await api.get('/admin/verify');
+        const response = await authAPI.verify();
         setUser(response.data.user);
       }
     } catch (error) {
@@ -35,9 +35,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (credentials) => {
+  const login = async (email, password) => {
     try {
-      const response = await api.post('/admin/login', credentials);
+      // Convert email to username for backend compatibility
+      const username = email === 'admin@chooflex.com' ? 'admin' : email;
+      const response = await authAPI.login({ username, password });
       const { token, user } = response.data;
       
       localStorage.setItem('adminToken', token);
@@ -46,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed';
+      const message = error.response?.data?.error || 'Login failed';
       toast.error(message);
       return { success: false, error: message };
     }

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 // Base API URL - adjust according to your backend
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Create axios instance
 const api = axios.create({
@@ -47,8 +47,8 @@ api.interceptors.response.use(
 
 // API endpoints
 export const authAPI = {
-  login: (credentials) => api.post('/admin/auth/login', credentials),
-  verify: () => api.get('/admin/auth/verify'),
+  login: (credentials) => api.post('/auth/login', credentials),
+  verify: () => api.get('/auth/session'),
   logout: () => api.post('/admin/auth/logout'),
 };
 
