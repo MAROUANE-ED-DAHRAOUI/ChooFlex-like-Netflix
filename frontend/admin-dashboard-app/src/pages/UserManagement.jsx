@@ -227,46 +227,53 @@ const UserManagement = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm('')} 
-              className="clear-search"
-            >
-              ×
-            </button>
-          )}
         </div>
-        <div className="filters">
-          <div className="filter-group">
-            <FiFilter className="filter-icon" />
+        
+        <div className="filter-group">
+          <div className="filter-select">
             <select 
               value={statusFilter} 
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="filter-select"
             >
               <option value="all">All Status</option>
               <option value="active">Active Users</option>
               <option value="banned">Banned Users</option>
+              <option value="inactive">Inactive Users</option>
             </select>
           </div>
-          <select 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
-            className="filter-select"
-          >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="username">Username A-Z</option>
-            <option value="email">Email A-Z</option>
-            <option value="watchtime">Most Active</option>
-          </select>
+          
+          <div className="filter-select">
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="name">Name A-Z</option>
+              <option value="email">Email A-Z</option>
+            </select>
+          </div>
         </div>
-        <div className="results-info">
-          Showing {filteredUsers.length} of {totalUsers} users
+        
+        <div className="action-buttons">
+          <button 
+            onClick={handleRefresh} 
+            className={`btn ${refreshing ? 'loading' : ''}`}
+            disabled={refreshing}
+          >
+            <FiRefreshCw className={refreshing ? 'spinning' : ''} />
+            {refreshing ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button onClick={exportUsers} className="btn">
+            <FiDownload /> Export
+          </button>
+          <button className="btn primary">
+            <FiPlus /> Add User
+          </button>
         </div>
       </div>
 
-      {/* Enhanced Users Table */}
+      {/* Users Table */}
       <div className="users-table-container">
         {filteredUsers.length === 0 ? (
           <div className="empty-state">
@@ -280,132 +287,124 @@ const UserManagement = () => {
             </p>
           </div>
         ) : (
-          <table className="users-table">
-            <thead>
-              <tr>
-                <th>User Info</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Join Date</th>
-                <th>Activity</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map(user => (
-                <tr key={user.id} className={user.status === 'banned' ? 'banned-user' : ''}>
-                  <td>
-                    <div className="user-info">
-                      <div className="user-avatar">
-                        {user.profilePicture ? (
-                          <img src={user.profilePicture} alt={user.username} />
-                        ) : (
-                          <div className="avatar-placeholder">
-                            {user.username.charAt(0).toUpperCase()}
-                          </div>
-                        )}
+          <div className="users-table">
+            <div className="table-header">
+              <div className="header-cell">User Info</div>
+              <div className="header-cell">Email</div>
+              <div className="header-cell">Status</div>
+              <div className="header-cell">Join Date</div>
+              <div className="header-cell">Activity</div>
+              <div className="header-cell">Actions</div>
+            </div>
+            
+            {filteredUsers.map(user => (
+              <div key={user.id} className={`user-row ${user.status === 'banned' ? 'banned-user' : ''}`}>
+                <div className="user-info">
+                  <div className="user-avatar">
+                    {user.profilePicture ? (
+                      <img src={user.profilePicture} alt={user.username} />
+                    ) : (
+                      <div className="avatar-placeholder">
+                        {user.username.charAt(0).toUpperCase()}
                       </div>
-                      <div className="user-details">
-                        <div className="username">{user.username}</div>
-                        <div className="user-id">ID: {user.id}</div>
-                        {user.isAdmin && <div className="admin-badge">Admin</div>}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="email-cell">
-                      {user.email}
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${user.status}`}>
-                      {user.status === 'active' ? (
-                        <>
-                          <FiUserCheck className="status-icon" />
-                          Active
-                        </>
-                      ) : (
-                        <>
-                          <FiUserX className="status-icon" />
-                          Banned
-                        </>
-                      )}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="date-cell">
-                      <div className="date">
-                        {new Date(user.joinDate).toLocaleDateString()}
-                      </div>
-                      <div className="time">
-                        {new Date(user.joinDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="activity-cell">
-                      <div className="activity-metric">
-                        <FiEye className="metric-icon" />
-                        {user.totalWatchTime}h
-                      </div>
-                      <div className="activity-metric">
-                        <FiUsers className="metric-icon" />
-                        {user.favoritesCount} favs
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="actions">
-                      <button 
-                        className="action-btn view" 
-                        title="View User Details"
-                        onClick={() => handleViewUser(user)}
-                      >
-                        <FiEye />
-                      </button>
-                      
-                      <button 
-                        className="action-btn edit" 
-                        title="Edit User"
-                        disabled={actionLoading[user.id]}
-                      >
-                        <FiEdit />
-                      </button>
-                      
-                      {user.status === 'active' ? (
-                        <button 
-                          className={`action-btn ban ${actionLoading[user.id] === 'ban' ? 'loading' : ''}`}
-                          title="Ban User"
-                          onClick={() => handleUserAction(user.id, 'ban')}
-                          disabled={actionLoading[user.id]}
-                        >
-                          {actionLoading[user.id] === 'ban' ? <FiRefreshCw className="spinning" /> : <FiUserX />}
-                        </button>
-                      ) : (
-                        <button 
-                          className={`action-btn unban ${actionLoading[user.id] === 'unban' ? 'loading' : ''}`}
-                          title="Unban User"
-                          onClick={() => handleUserAction(user.id, 'unban')}
-                          disabled={actionLoading[user.id]}
-                        >
-                          {actionLoading[user.id] === 'unban' ? <FiRefreshCw className="spinning" /> : <FiUserCheck />}
-                        </button>
-                      )}
-                      
-                      <button 
-                        className={`action-btn delete ${actionLoading[user.id] === 'delete' ? 'loading' : ''}`}
-                        title="Delete User"
-                        onClick={() => handleUserAction(user.id, 'delete')}
-                        disabled={actionLoading[user.id]}
-                      >
-                        {actionLoading[user.id] === 'delete' ? <FiRefreshCw className="spinning" /> : <FiTrash />}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    )}
+                  </div>
+                  <div className="user-details">
+                    <h4>{user.username}</h4>
+                    <p>ID: {user.id}</p>
+                    {user.isAdmin && <span className="admin-badge">Admin</span>}
+                  </div>
+                </div>
+                
+                <div className="user-email">
+                  {user.email}
+                </div>
+                
+                <div className="user-status">
+                  <span className={`status-badge ${user.status}`}>
+                    {user.status === 'active' ? (
+                      <>
+                        <FiUserCheck className="status-icon" />
+                        Active
+                      </>
+                    ) : (
+                      <>
+                        <FiUserX className="status-icon" />
+                        Banned
+                      </>
+                    )}
+                  </span>
+                </div>
+                
+                <div className="user-joined">
+                  <div className="date">
+                    {new Date(user.joinDate).toLocaleDateString()}
+                  </div>
+                  <div className="time">
+                    {new Date(user.joinDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </div>
+                </div>
+                
+                <div className="user-activity">
+                  <div className="activity-metric">
+                    <FiEye className="metric-icon" />
+                    {user.totalWatchTime}h
+                  </div>
+                  <div className="activity-metric">
+                    <FiUsers className="metric-icon" />
+                    {user.favoritesCount} favs
+                  </div>
+                </div>
+                
+                <div className="user-actions">
+                  <button 
+                    className="action-btn edit" 
+                    title="View User Details"
+                    onClick={() => handleViewUser(user)}
+                  >
+                    <FiEye />
+                  </button>
+                  
+                  <button 
+                    className="action-btn edit" 
+                    title="Edit User"
+                    disabled={actionLoading[user.id]}
+                  >
+                    <FiEdit />
+                  </button>
+                  
+                  {user.status === 'active' ? (
+                    <button 
+                      className={`action-btn delete ${actionLoading[user.id] === 'ban' ? 'loading' : ''}`}
+                      title="Ban User"
+                      onClick={() => handleUserAction(user.id, 'ban')}
+                      disabled={actionLoading[user.id]}
+                    >
+                      {actionLoading[user.id] === 'ban' ? <FiRefreshCw className="spinning" /> : <FiUserX />}
+                    </button>
+                  ) : (
+                    <button 
+                      className={`action-btn edit ${actionLoading[user.id] === 'unban' ? 'loading' : ''}`}
+                      title="Unban User"
+                      onClick={() => handleUserAction(user.id, 'unban')}
+                      disabled={actionLoading[user.id]}
+                    >
+                      {actionLoading[user.id] === 'unban' ? <FiRefreshCw className="spinning" /> : <FiUserCheck />}
+                    </button>
+                  )}
+                  
+                  <button 
+                    className={`action-btn delete ${actionLoading[user.id] === 'delete' ? 'loading' : ''}`}
+                    title="Delete User"
+                    onClick={() => handleUserAction(user.id, 'delete')}
+                    disabled={actionLoading[user.id]}
+                  >
+                    {actionLoading[user.id] === 'delete' ? <FiRefreshCw className="spinning" /> : <FiTrash />}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
