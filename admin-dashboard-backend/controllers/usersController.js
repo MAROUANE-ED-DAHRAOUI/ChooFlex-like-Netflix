@@ -1,6 +1,20 @@
 const axios = require('axios');
 
-const MAIN_BACKEND_URL = process.env.MAIN_BACKEND_URL || 'http://localhost:5000';
+const MAIN_BACKEND_URL = process.env.MAIN_BACKEND_URL || 'http://localhost:8000';
+
+// Function to get admin token from main backend
+const getAdminToken = async () => {
+  try {
+    const response = await axios.post(`${MAIN_BACKEND_URL}/api/auth/login`, {
+      email: 'admin@chooflex.com',
+      password: 'admin123'
+    });
+    return response.data.token_access;
+  } catch (error) {
+    console.error('Failed to get admin token:', error.message);
+    return null;
+  }
+};
 
 // Fallback data for when main backend is unavailable
 let mockUsers = [
@@ -10,9 +24,19 @@ let mockUsers = [
 
 exports.list = async (req, res) => {
   try {
+    // Get admin token for main backend
+    const adminToken = await getAdminToken();
+    if (!adminToken) {
+      console.warn('Failed to get admin token, using mock data');
+      return res.json(mockUsers);
+    }
+
     // Try to fetch from main backend
     const response = await axios.get(`${MAIN_BACKEND_URL}/api/users`, {
-      timeout: 5000
+      timeout: 5000,
+      headers: {
+        'Authorization': `Bearer ${adminToken}`
+      }
     });
     res.json(response.data);
   } catch (error) {
@@ -26,14 +50,13 @@ exports.get = async (req, res) => {
   try {
     const { id } = req.params;
     
-    if (!id || isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
-    }
-    
-    // Try to fetch from main backend
+    // Try to fetch from main backend using the MongoDB ObjectId format
     try {
-      const response = await axios.get(`${MAIN_BACKEND_URL}/api/users/${id}`, {
-        timeout: 5000
+      const response = await axios.get(`${MAIN_BACKEND_URL}/api/users/find/${id}`, {
+        timeout: 5000,
+        headers: {
+          'Authorization': req.headers.authorization
+        }
       });
       res.json(response.data);
     } catch (backendError) {
@@ -55,10 +78,6 @@ exports.update = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
     
-    if (!id || isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
-    }
-    
     // Basic validation
     if (updates.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(updates.email)) {
       return res.status(400).json({ error: 'Invalid email format' });
@@ -67,7 +86,10 @@ exports.update = async (req, res) => {
     // Try to update in main backend
     try {
       const response = await axios.put(`${MAIN_BACKEND_URL}/api/users/${id}`, updates, {
-        timeout: 5000
+        timeout: 5000,
+        headers: {
+          'Authorization': req.headers.authorization
+        }
       });
       res.json(response.data);
     } catch (backendError) {
@@ -90,14 +112,13 @@ exports.remove = async (req, res) => {
   try {
     const { id } = req.params;
     
-    if (!id || isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
-    }
-    
     // Try to delete from main backend
     try {
       await axios.delete(`${MAIN_BACKEND_URL}/api/users/${id}`, {
-        timeout: 5000
+        timeout: 5000,
+        headers: {
+          'Authorization': req.headers.authorization
+        }
       });
       res.json({ message: 'User deleted successfully' });
     } catch (backendError) {

@@ -14,10 +14,10 @@ router.put('/:id', usersController.update);
 // DELETE /api/users/:id
 router.delete('/:id', usersController.remove);
 
-// POST /api/users/:id/ban
-router.post('/:id/ban', usersController.ban);
+// PUT /api/users/:id/ban
+router.put('/:id/ban', usersController.ban);
 
-// POST /api/users/:id/unban
-router.post('/:id/unban', usersController.unban);
+// PUT /api/users/:id/unban
+router.put('/:id/unban', usersController.unban);
 
 module.exports = router;
