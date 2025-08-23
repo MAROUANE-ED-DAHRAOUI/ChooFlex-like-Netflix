@@ -60,6 +60,27 @@ app.use('/api/content', authMiddleware, contentRoutes);
 app.use('/api/analytics', authMiddleware, analyticsRoutes);
 app.use('/api/settings', authMiddleware, settingsRoutes);
 
+// Fallback routes for demo/testing (when main backend is not available)
+app.get('/api/users', authMiddleware, (req, res) => {
+  try {
+    // Import the analytics controller to use its mock data
+    const analyticsController = require('./controllers/analyticsController');
+    analyticsController.getMockUsers(req, res);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+app.get('/api/content', authMiddleware, (req, res) => {
+  try {
+    // Import the analytics controller to use its mock data
+    const analyticsController = require('./controllers/analyticsController');
+    analyticsController.getMockContent(req, res);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch content' });
+  }
+});
+
 // Health check
 app.get('/', (req, res) => {
   res.json({ 

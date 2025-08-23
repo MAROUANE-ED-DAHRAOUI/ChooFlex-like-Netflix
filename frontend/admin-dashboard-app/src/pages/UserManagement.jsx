@@ -3,9 +3,11 @@ import { FiSearch, FiEdit, FiTrash, FiUserX, FiUserCheck, FiUsers, FiRefreshCw, 
 import { usersAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import Modal from '../components/Modal';
+import { useTheme } from '../utils/ThemeContext';
 import './UserManagement.scss';
 
 const UserManagement = () => {
+  const { theme } = useTheme();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -176,63 +178,54 @@ const UserManagement = () => {
   return (
     <div className="user-management">
       <div className="page-header">
-        <div className="header-left">
-          <h1>Live User Management</h1>
-          <p>Manage users directly from your MongoDB database</p>
+        <h1>User Management</h1>
+        <p>Manage users directly from your MongoDB database</p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon"><FiUsers /></div>
+          <div className="stat-content">
+            <div className="stat-title">Total Users</div>
+            <div className="stat-value">{totalUsers}</div>
+            <div className="stat-change">Real database count</div>
+          </div>
         </div>
-        <div className="header-right">
-          <button 
-            onClick={handleRefresh} 
-            className={`btn refresh-btn ${refreshing ? 'loading' : ''}`}
-            disabled={refreshing}
-          >
-            <FiRefreshCw className={refreshing ? 'spinning' : ''} />
-            {refreshing ? 'Refreshing...' : 'Refresh'}
-          </button>
-          <button onClick={exportUsers} className="btn export-btn">
-            <FiDownload /> Export
-          </button>
+        <div className="stat-card">
+          <div className="stat-icon"><FiUserCheck /></div>
+          <div className="stat-content">
+            <div className="stat-title">Active Users</div>
+            <div className="stat-value">{activeUsers}</div>
+            <div className="stat-change">{totalUsers > 0 ? Math.round((activeUsers/totalUsers)*100) : 0}% of total</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon"><FiUserX /></div>
+          <div className="stat-content">
+            <div className="stat-title">Banned Users</div>
+            <div className="stat-value">{bannedUsers}</div>
+            <div className="stat-change">Security actions</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon"><FiPlus /></div>
+          <div className="stat-content">
+            <div className="stat-title">New This Month</div>
+            <div className="stat-value">{newUsersThisMonth}</div>
+            <div className="stat-change">Recent signups</div>
+          </div>
         </div>
       </div>
 
-      {/* Real Database Statistics */}
-      <div className="user-stats">
-        <div className="stat-card total">
-          <FiUsers className="stat-icon" />
-          <div className="stat-value">{totalUsers}</div>
-          <div className="stat-label">Total Users</div>
-          <div className="stat-trend">Real database count</div>
-        </div>
-        <div className="stat-card active">
-          <FiUserCheck className="stat-icon" />
-          <div className="stat-value">{activeUsers}</div>
-          <div className="stat-label">Active Users</div>
-          <div className="stat-trend">{totalUsers > 0 ? Math.round((activeUsers/totalUsers)*100) : 0}% of total</div>
-        </div>
-        <div className="stat-card banned">
-          <FiUserX className="stat-icon" />
-          <div className="stat-value">{bannedUsers}</div>
-          <div className="stat-label">Banned Users</div>
-          <div className="stat-trend">{totalUsers > 0 ? Math.round((bannedUsers/totalUsers)*100) : 0}% of total</div>
-        </div>
-        <div className="stat-card new">
-          <FiPlus className="stat-icon" />
-          <div className="stat-value">{newUsersThisMonth}</div>
-          <div className="stat-label">New This Month</div>
-          <div className="stat-trend">Recent signups</div>
-        </div>
-      </div>
-
-      {/* Enhanced Filters Section */}
-      <div className="filters-section">
+      {/* Controls Section */}
+      <div className="controls-section">
         <div className="search-box">
-          <FiSearch className="search-icon" />
           <input
             type="text"
             placeholder="Search users by username or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
           />
           {searchTerm && (
             <button 

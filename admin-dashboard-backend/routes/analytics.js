@@ -14,4 +14,8 @@ router.get('/active-users', analyticsController.activeUsers);
 // GET /api/analytics/views-over-time
 router.get('/views-over-time', analyticsController.viewsOverTime);
 
+// Mock data endpoints for demo
+router.get('/mock-users', analyticsController.getMockUsers);
+router.get('/mock-content', analyticsController.getMockContent);
+
 module.exports = router;
