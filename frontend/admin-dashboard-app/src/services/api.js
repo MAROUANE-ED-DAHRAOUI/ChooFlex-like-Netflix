@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 // Base API URL - adjust according to your backend
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 // Create axios instance
 const api = axios.create({
@@ -53,47 +53,47 @@ export const authAPI = {
 };
 
 export const usersAPI = {
-  getAll: (params = {}) => api.get('/admin/users', { params }),
-  getById: (id) => api.get(`/admin/users/${id}`),
-  create: (userData) => api.post('/admin/users', userData),
-  update: (id, userData) => api.put(`/admin/users/${id}`, userData),
-  delete: (id) => api.delete(`/admin/users/${id}`),
-  ban: (id) => api.put(`/admin/users/${id}/ban`),
-  unban: (id) => api.put(`/admin/users/${id}/unban`),
+  getAll: (params = {}) => api.get('/users', { params }),
+  getById: (id) => api.get(`/users/${id}`),
+  create: (userData) => api.post('/users', userData),
+  update: (id, userData) => api.put(`/users/${id}`, userData),
+  delete: (id) => api.delete(`/users/${id}`),
+  ban: (id) => api.put(`/users/${id}/ban`),
+  unban: (id) => api.put(`/users/${id}/unban`),
 };
 
 export const contentAPI = {
-  getAll: (params = {}) => api.get('/admin/content', { params }),
-  getById: (id) => api.get(`/admin/content/${id}`),
-  create: (contentData) => api.post('/admin/content', contentData),
-  update: (id, contentData) => api.put(`/admin/content/${id}`, contentData),
-  delete: (id) => api.delete(`/admin/content/${id}`),
-  setFeatured: (id, featured) => api.put(`/admin/content/${id}/featured`, { featured }),
+  getAll: (params = {}) => api.get('/content', { params }),
+  getById: (id) => api.get(`/content/${id}`),
+  create: (contentData) => api.post('/content', contentData),
+  update: (id, contentData) => api.put(`/content/${id}`, contentData),
+  delete: (id) => api.delete(`/content/${id}`),
+  setFeatured: (id, featured) => api.put(`/content/${id}/featured`, { featured }),
   uploadFile: (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post('/admin/upload', formData, {
+    return api.post('/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
   },
 };
 
 export const analyticsAPI = {
-  getStats: () => api.get('/admin/analytics/stats'),
-  getTopContent: (params = {}) => api.get('/admin/analytics/top-content', { params }),
-  getActiveUsers: (params = {}) => api.get('/admin/analytics/active-users', { params }),
-  getUserStats: (params = {}) => api.get('/admin/analytics/user-stats', { params }),
-  getViewStats: (params = {}) => api.get('/admin/analytics/view-stats', { params }),
+  getStats: () => api.get('/analytics/stats'),
+  getTopContent: (params = {}) => api.get('/analytics/top-content', { params }),
+  getActiveUsers: (params = {}) => api.get('/analytics/active-users', { params }),
+  getUserStats: (params = {}) => api.get('/analytics/user-stats', { params }),
+  getViewStats: (params = {}) => api.get('/analytics/view-stats', { params }),
 };
 
 export const settingsAPI = {
-  getProfile: () => api.get('/admin/settings/profile'),
-  updateProfile: (profileData) => api.put('/admin/settings/profile', profileData),
-  changePassword: (passwordData) => api.put('/admin/settings/password', passwordData),
-  getNotifications: (params = {}) => api.get('/admin/settings/notifications', { params }),
-  markNotificationRead: (id) => api.put(`/admin/settings/notifications/${id}/read`),
-  markAllNotificationsRead: () => api.put('/admin/settings/notifications/read-all'),
-  deleteNotification: (id) => api.delete(`/admin/settings/notifications/${id}`),
+  getProfile: () => api.get('/settings/profile'),
+  updateProfile: (profileData) => api.put('/settings/profile', profileData),
+  changePassword: (passwordData) => api.put('/settings/password', passwordData),
+  getNotifications: (params = {}) => api.get('/settings/notifications', { params }),
+  markNotificationRead: (id) => api.put(`/settings/notifications/${id}/read`),
+  markAllNotificationsRead: () => api.put('/settings/notifications/read-all'),
+  deleteNotification: (id) => api.delete(`/settings/notifications/${id}`),
 };
 
 export default api;

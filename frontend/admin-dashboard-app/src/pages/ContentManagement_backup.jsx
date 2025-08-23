@@ -41,21 +41,9 @@ const ContentManagement = () => {
         featured: filters.featured 
       });
       
-      console.log('API Response:', response.data);
-      
-      // Handle different response structures
-      let contentData = [];
-      if (response.data.status === 'success' && response.data.data) {
-        contentData = response.data.data;
-      } else if (Array.isArray(response.data)) {
-        contentData = response.data;
-      } else if (response.data.data && Array.isArray(response.data.data)) {
-        contentData = response.data.data;
-      }
-      
       // Transform backend data to match frontend expectations
-      const transformedContent = contentData.map(item => ({
-        id: item._id || item.id,
+      const transformedContent = response.data.map(item => ({
+        id: item._id,
         title: item.title,
         type: item.isSeries ? 'series' : 'movie',
         genre: item.genre,
@@ -73,14 +61,13 @@ const ContentManagement = () => {
         trailer: item.trailer
       }));
       
-      console.log('Transformed content:', transformedContent);
       setContent(transformedContent);
       
     } catch (error) {
       console.error('Fetch content error:', error);
       toast.error('Failed to fetch content from database');
       
-      // Fallback to enhanced mock data if API fails
+      // Fallback to mock data if API fails
       setContent([
         {
           id: 1,
@@ -93,7 +80,7 @@ const ContentManagement = () => {
           featured: true,
           createdAt: new Date().toISOString(),
           views: 15420,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'
+          thumbnail: '/api/placeholder/300/400'
         },
         {
           id: 2,
@@ -108,188 +95,7 @@ const ContentManagement = () => {
           featured: false,
           createdAt: new Date(Date.now() - 86400000).toISOString(),
           views: 28930,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg'
-        },
-        {
-          id: 3,
-          title: 'The Dark Knight',
-          type: 'movie',
-          genre: 'Action',
-          year: 2008,
-          duration: 152,
-          rating: 9.0,
-          featured: true,
-          createdAt: new Date(Date.now() - 172800000).toISOString(),
-          views: 22450,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg'
-        },
-        {
-          id: 4,
-          title: 'Stranger Things',
-          type: 'series',
-          genre: 'Sci-Fi',
-          year: 2016,
-          duration: null,
-          seasons: 4,
-          episodes: 42,
-          rating: 8.7,
-          featured: true,
-          createdAt: new Date(Date.now() - 259200000).toISOString(),
-          views: 35600,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg'
-        },
-        {
-          id: 5,
-          title: 'Pulp Fiction',
-          type: 'movie',
-          genre: 'Crime',
-          year: 1994,
-          duration: 154,
-          rating: 8.9,
-          featured: false,
-          createdAt: new Date(Date.now() - 345600000).toISOString(),
-          views: 18750,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg'
-        },
-        {
-          id: 6,
-          title: 'The Crown',
-          type: 'series',
-          genre: 'Drama',
-          year: 2016,
-          duration: null,
-          seasons: 6,
-          episodes: 60,
-          rating: 8.6,
-          featured: false,
-          createdAt: new Date(Date.now() - 432000000).toISOString(),
-          views: 24300,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/1M876KQUEYqNttmEsyEDwHbbFBb.jpg'
-        },
-        {
-          id: 7,
-          title: 'Avengers: Endgame',
-          type: 'movie',
-          genre: 'Action',
-          year: 2019,
-          duration: 181,
-          rating: 8.4,
-          featured: true,
-          createdAt: new Date(Date.now() - 518400000).toISOString(),
-          views: 45200,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg'
-        },
-        {
-          id: 8,
-          title: 'The Witcher',
-          type: 'series',
-          genre: 'Fantasy',
-          year: 2019,
-          duration: null,
-          seasons: 3,
-          episodes: 24,
-          rating: 8.2,
-          featured: false,
-          createdAt: new Date(Date.now() - 604800000).toISOString(),
-          views: 31500,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVa04URsPm.jpg'
-        },
-        {
-          id: 9,
-          title: 'Parasite',
-          type: 'movie',
-          genre: 'Thriller',
-          year: 2019,
-          duration: 132,
-          rating: 8.6,
-          featured: false,
-          createdAt: new Date(Date.now() - 691200000).toISOString(),
-          views: 16800,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg'
-        },
-        {
-          id: 10,
-          title: 'Money Heist',
-          type: 'series',
-          genre: 'Crime',
-          year: 2017,
-          duration: null,
-          seasons: 5,
-          episodes: 52,
-          rating: 8.3,
-          featured: true,
-          createdAt: new Date(Date.now() - 777600000).toISOString(),
-          views: 52400,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg'
-        },
-        {
-          id: 11,
-          title: 'Interstellar',
-          type: 'movie',
-          genre: 'Sci-Fi',
-          year: 2014,
-          duration: 169,
-          rating: 8.6,
-          featured: false,
-          createdAt: new Date(Date.now() - 864000000).toISOString(),
-          views: 28900,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg'
-        },
-        {
-          id: 12,
-          title: 'The Office',
-          type: 'series',
-          genre: 'Comedy',
-          year: 2005,
-          duration: null,
-          seasons: 9,
-          episodes: 201,
-          rating: 9.0,
-          featured: false,
-          createdAt: new Date(Date.now() - 950400000).toISOString(),
-          views: 67200,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/7DJKHzAi83BmQrWLrYYOqcoKfhR.jpg'
-        },
-        {
-          id: 13,
-          title: 'Joker',
-          type: 'movie',
-          genre: 'Thriller',
-          year: 2019,
-          duration: 122,
-          rating: 8.4,
-          featured: true,
-          createdAt: new Date(Date.now() - 1036800000).toISOString(),
-          views: 39800,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg'
-        },
-        {
-          id: 14,
-          title: 'Friends',
-          type: 'series',
-          genre: 'Comedy',
-          year: 1994,
-          duration: null,
-          seasons: 10,
-          episodes: 236,
-          rating: 8.9,
-          featured: false,
-          createdAt: new Date(Date.now() - 1123200000).toISOString(),
-          views: 89300,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/f496cm9enuEsZkSPzCwnTESEK5s.jpg'
-        },
-        {
-          id: 15,
-          title: 'Dune',
-          type: 'movie',
-          genre: 'Sci-Fi',
-          year: 2021,
-          duration: 155,
-          rating: 8.0,
-          featured: true,
-          createdAt: new Date(Date.now() - 1209600000).toISOString(),
-          views: 25600,
-          thumbnail: 'https://image.tmdb.org/t/p/w500/d5NXSklXo0qyIYkgV94XAgMIckC.jpg'
+          thumbnail: '/api/placeholder/300/400'
         }
       ]);
     } finally {
@@ -490,12 +296,21 @@ const ContentManagement = () => {
           <div className="stat-label">Featured</div>
         </div>
       </div>
+            <div className="stat-item">
+              <span className="stat-label">Movies:</span>
+              <span className="stat-value">{content.filter(item => item.type === 'movie').length}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Series:</span>
+              <span className="stat-value">{content.filter(item => item.type === 'series').length}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Featured:</span>
+              <span className="stat-value">{content.filter(item => item.featured).length}</span>
+            </div>
+          </div>
 
-      {/* Content Grid */}
-      {loading ? (
-        <LoadingSpinner text="Loading content..." />
-      ) : (
-        <div className="content-grid">
+          <div className="content-grid">
             {filteredContent.map((item) => (
               <div key={item.id} className="content-card">
                 <div className="content-thumbnail">
@@ -560,15 +375,15 @@ const ContentManagement = () => {
                 </div>
               </div>
             ))}
+          </div>
           
           {filteredContent.length === 0 && (
             <div className="empty-state">
               <FiSearch className="empty-icon" />
               <p>No content found matching your criteria</p>
-              <p>Try adjusting your filters or search terms</p>
             </div>
           )}
-        </div>
+        </>
       )}
 
       {/* Modals */}
