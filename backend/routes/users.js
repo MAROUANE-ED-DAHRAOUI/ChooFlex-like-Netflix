@@ -195,4 +195,83 @@ router.get("/stats", verifyToken, async (req, res) => {
         }
 });
 
+// Ban user (admin only)
+router.put('/:id/ban', verifyToken, async (req, res) => {
+    try {
+        // Only admin can ban users
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "You are not allowed to ban users" });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { banned: true },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "User banned successfully",
+            user: user
+        });
+    } catch (err) {
+        console.error("Error banning user:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Unban user (admin only)
+router.put('/:id/unban', verifyToken, async (req, res) => {
+    try {
+        // Only admin can unban users
+        if (!req.user.isAdmin) {
+            return res.status(403).json({ error: "You are not allowed to unban users" });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { banned: false },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "User unbanned successfully",
+            user: user
+        });
+    } catch (err) {
+        console.error("Error unbanning user:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Temporary route to make admin user an admin (REMOVE IN PRODUCTION)
+router.post('/make-admin/:username', async (req, res) => {
+    try {
+        const user = await User.findOneAndUpdate(
+            { username: req.params.username },
+            { isAdmin: true },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "User made admin successfully",
+            user: user
+        });
+    } catch (err) {
+        console.error("Error making user admin:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;
