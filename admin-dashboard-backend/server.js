@@ -71,16 +71,6 @@ app.get('/api/users', authMiddleware, (req, res) => {
   }
 });
 
-app.get('/api/content', authMiddleware, (req, res) => {
-  try {
-    // Import the analytics controller to use its mock data
-    const analyticsController = require('./controllers/analyticsController');
-    analyticsController.getMockContent(req, res);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch content' });
-  }
-});
-
 // Health check
 app.get('/', (req, res) => {
   res.json({ 

@@ -37,17 +37,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      // Convert email to username for backend compatibility
-      const username = email === 'admin@chooflex.com' ? 'admin' : email;
-      const response = await authAPI.login({ username, password });
-      const { token, user } = response.data;
+      // Send email and password directly to main backend
+      const response = await authAPI.login({ email, password });
       
-      localStorage.setItem('adminToken', token);
+      // Handle the response structure from main backend
+      const { token_access, user } = response.data;
+      
+      // Store the token and user data
+      localStorage.setItem('adminToken', token_access);
+      localStorage.setItem('user', JSON.stringify({ ...user, token_access }));
       setUser(user);
       toast.success('Login successful!');
       
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       const message = error.response?.data?.error || 'Login failed';
       toast.error(message);
       return { success: false, error: message };

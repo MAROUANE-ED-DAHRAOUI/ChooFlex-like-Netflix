@@ -34,6 +34,15 @@ const upload = multer({
 // GET /api/content
 router.get('/', contentController.list);
 
+// GET /api/content/search
+router.get('/search', contentController.search);
+
+// GET /api/content/stats
+router.get('/stats', contentController.getStats);
+
+// GET /api/content/:id
+router.get('/:id', contentController.getById);
+
 // POST /api/content
 router.post('/', contentController.create);
 
@@ -43,8 +52,8 @@ router.put('/:id', contentController.update);
 // DELETE /api/content/:id
 router.delete('/:id', contentController.remove);
 
-// POST /api/content/:id/feature
-router.post('/:id/feature', contentController.setFeatured);
+// PUT /api/content/:id/featured
+router.put('/:id/featured', contentController.setFeatured);
 
 // POST /api/content/:id/thumbnail
 router.post('/:id/thumbnail', upload.single('thumbnail'), contentController.uploadThumbnail);

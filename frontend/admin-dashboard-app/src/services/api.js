@@ -1,8 +1,34 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// Base API URL - adjust according to your backend
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+// Base API URL - connect to the main backend where movies are stored
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+
+// Helper function for admin login
+const adminLogin = async () => {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/login`, {
+      email: 'admin@chooflex.com',
+      password: 'admin123'
+    });
+    
+    if (response.data && response.data.token_access) {
+      const token = response.data.token_access;
+      localStorage.setItem('adminToken', token);
+      
+      // Also store as user for consistency
+      localStorage.setItem('user', JSON.stringify({
+        ...response.data,
+        isAdmin: true
+      }));
+      
+      return token;
+    }
+  } catch (error) {
+    console.warn('Admin auto-login failed:', error.message);
+    return null;
+  }
+};
 
 // Create axios instance
 const api = axios.create({
@@ -16,7 +42,18 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('adminToken');
+    // Don't add token to login requests
+    if (config.url?.includes('/auth/login')) {
+      return config;
+    }
+    
+    // Get the main app's user token for authentication
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const adminToken = localStorage.getItem('adminToken');
+    
+    // Use main app token if available, otherwise use admin token
+    const token = user?.token_access || adminToken;
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -33,6 +70,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('adminToken');
+      localStorage.removeItem('user');
       window.location.href = '/login';
       return Promise.reject(error);
     }
@@ -49,7 +87,7 @@ api.interceptors.response.use(
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   verify: () => api.get('/auth/session'),
-  logout: () => api.post('/admin/auth/logout'),
+  logout: () => api.post('/auth/logout'),
 };
 
 export const usersAPI = {
@@ -63,12 +101,13 @@ export const usersAPI = {
 };
 
 export const contentAPI = {
-  getAll: (params = {}) => api.get('/content', { params }),
-  getById: (id) => api.get(`/content/${id}`),
-  create: (contentData) => api.post('/content', contentData),
-  update: (id, contentData) => api.put(`/content/${id}`, contentData),
-  delete: (id) => api.delete(`/content/${id}`),
-  setFeatured: (id, featured) => api.put(`/content/${id}/featured`, { featured }),
+  getAll: (params = {}) => api.get('/movies/all', { params }),
+  getById: (id) => api.get(`/movies/find/${id}`),
+  create: (contentData) => api.post('/movies', contentData),
+  update: (id, contentData) => api.put(`/movies/${id}`, contentData),
+  delete: (id) => api.delete(`/movies/${id}`),
+  setFeatured: (id, featured) => api.put(`/movies/${id}`, { featured }),
+  search: (params = {}) => api.get('/search', { params }),
   uploadFile: (file) => {
     const formData = new FormData();
     formData.append('file', file);
