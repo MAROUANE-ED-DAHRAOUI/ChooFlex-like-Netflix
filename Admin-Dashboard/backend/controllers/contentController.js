@@ -53,3 +53,61 @@ exports.uploadThumbnail = async (req, res) => {
     res.status(500).json({ status: 'error', message: error.message });
   }
 };
+
+exports.search = async (req, res) => {
+  try {
+    const { query } = req.query;
+    const mockResults = [
+      { id: 1, title: 'Inception', type: 'movie', featured: false },
+      { id: 2, title: 'Interstellar', type: 'movie', featured: true }
+    ];
+    
+    res.json({
+      status: 'success',
+      data: { content: mockResults, total: mockResults.length }
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
+exports.getStats = async (req, res) => {
+  try {
+    const mockStats = {
+      totalContent: 150,
+      movies: 85,
+      series: 65,
+      featured: 12,
+      recentlyAdded: 8
+    };
+    
+    res.json({
+      status: 'success',
+      data: mockStats
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
+exports.getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const mockContent = {
+      id: parseInt(id),
+      title: 'Sample Content',
+      type: 'movie',
+      description: 'Sample description',
+      featured: false,
+      thumbnail: null,
+      createdAt: new Date().toISOString()
+    };
+    
+    res.json({
+      status: 'success',
+      data: { content: mockContent }
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};

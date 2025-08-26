@@ -10,6 +10,7 @@ import MyList from "./pages/myList/MyList";
 import QueryProvider from "./providers/QueryProvider";
 import { MyListProvider } from "./hooks/useMyList.jsx";
 import { LikesProvider } from "./hooks/useLikes.jsx";
+import AIChatWidget from "./components/AIChatWidget";
 import {
   BrowserRouter as Router,
   Routes,
@@ -50,6 +51,8 @@ const App = () => {
                 </>
               )}
             </Routes>
+            {/* AI Chat Widget - Only show when user is logged in */}
+            {user && <AIChatWidget />}
           </Router>
         </LikesProvider>
       </MyListProvider>

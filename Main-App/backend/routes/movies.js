@@ -2,6 +2,18 @@ const router = require('express').Router();
 const Movies = require('../models/movie');
 const verifyToken = require('../middleware/verifyToken');
 
+// Get all movies (public endpoint for AI Chat Bot)
+router.get('/', async (req, res) => {
+    try {
+        // Get all movies that are not series
+        const movies = await Movies.find({ isSeries: false });
+        res.status(200).json(movies);
+    } catch (err) {
+        console.error("Error getting movies:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // Test endpoint for movies (no auth required)
 router.get('/test', async (req, res) => {
     try {

@@ -37,10 +37,12 @@ app.use(cors({
     'http://localhost:5174', 
     'http://localhost:3000',
     'http://localhost:3001', // Admin dashboard
+    'http://localhost:5003', // AI Chat Bot
     'http://127.0.0.1:5173', 
     'http://127.0.0.1:5174',
     'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001' // Admin dashboard
+    'http://127.0.0.1:3001', // Admin dashboard
+    'http://127.0.0.1:5003' // AI Chat Bot
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
