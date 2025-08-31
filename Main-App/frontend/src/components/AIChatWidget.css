@@ -103,11 +103,9 @@
   user-select: none;
   max-height: calc(100vh - 40px);
   min-height: 400px;
-  /* Override any default positioning */
+  /* Allow JavaScript to control positioning */
   bottom: auto !important;
   right: auto !important;
-  left: 0 !important;
-  top: 0 !important;
 }
 
 .chat-widget-window.dragging {

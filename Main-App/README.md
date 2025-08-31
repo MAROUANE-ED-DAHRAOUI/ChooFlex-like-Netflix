@@ -201,7 +201,7 @@ NODE_ENV=development
 ### Frontend (.env)
 ```env
 VITE_API_URL=http://localhost:8000/api
-VITE_AI_API_URL=http://localhost:5003/api
+VITE_AI_API_URL=http://localhost:8000/api
 ```
 
 ## 📱 Responsive Design

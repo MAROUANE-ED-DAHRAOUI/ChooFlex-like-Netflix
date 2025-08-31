@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FaComments, FaTimes, FaPaperPlane, FaRobot, FaUser, FaBrain } from 'react-icons/fa';
 import './AIChatWidget.css';
 
-const API_BASE_URL = 'http://localhost:5003/api';
+const API_BASE_URL = 'http://localhost:8000/api';
 
 const AIChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,9 +14,20 @@ const AIChatWidget = () => {
   // Initialize position safely
   const [position, setPosition] = useState(() => {
     const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
-    return { x: Math.max(20, windowWidth - 400), y: 50 };
+    const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+    return { 
+      x: Math.max(20, windowWidth - 420), // 420 = 400 (width) + 20 (margin)
+      y: Math.max(20, windowHeight - 570) // 570 = 550 (height) + 20 (margin)
+    };
   });
-  const [buttonPosition, setButtonPosition] = useState({ x: 20, y: 20 }); // Position for the chat button
+  const [buttonPosition, setButtonPosition] = useState(() => {
+    const windowWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+    return { 
+      x: Math.max(20, windowWidth - 80), // Right side with margin
+      y: Math.max(20, windowHeight - 100) // Bottom with margin
+    };
+  });
   const [isDragging, setIsDragging] = useState(false);
   const [isDraggingButton, setIsDraggingButton] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -204,6 +215,47 @@ const AIChatWidget = () => {
   // Handle button click vs drag
   const handleButtonClick = (e) => {
     if (!isDraggingButton) {
+      if (!isOpen) {
+        // Only recalculate position when opening, not when closing
+        const buttonRect = buttonRef.current?.getBoundingClientRect();
+        if (buttonRect) {
+          const windowWidth = window.innerWidth;
+          const windowHeight = window.innerHeight;
+          const chatWidth = 380;
+          const chatHeight = 550;
+          
+          // Calculate best position for chat window
+          let newX = buttonRect.left - chatWidth - 15; // To the left of button
+          let newY = buttonRect.top; // Aligned with button top
+          
+          // If chat would go off left edge, put it to the right of button
+          if (newX < 20) {
+            newX = buttonRect.right + 15;
+          }
+          
+          // If chat would still go off right edge, center it
+          if (newX + chatWidth > windowWidth - 20) {
+            newX = (windowWidth - chatWidth) / 2;
+          }
+          
+          // If chat would go off top edge, move it down
+          if (newY < 20) {
+            newY = 20;
+          }
+          
+          // If chat would go off bottom edge, move it up
+          if (newY + chatHeight > windowHeight - 20) {
+            newY = windowHeight - chatHeight - 20;
+          }
+          
+          // Final bounds check
+          newX = Math.max(20, Math.min(newX, windowWidth - chatWidth - 20));
+          newY = Math.max(20, Math.min(newY, windowHeight - chatHeight - 20));
+          
+          console.log('Setting chat position:', { x: newX, y: newY });
+          setPosition({ x: newX, y: newY });
+        }
+      }
       setIsOpen(!isOpen);
     }
   };
@@ -238,10 +290,8 @@ const AIChatWidget = () => {
           ref={widgetRef}
           style={{
             position: 'fixed',
-            left: `${Math.min(buttonPosition.x, window.innerWidth - 400)}px`,
-            top: `${Math.min(buttonPosition.y + 80, window.innerHeight - 550)}px`,
-            bottom: 'auto',
-            right: 'auto',
+            left: `${position.x}px`,
+            top: `${position.y}px`,
             zIndex: 9998
           }}
           onMouseDown={handleMouseDown}

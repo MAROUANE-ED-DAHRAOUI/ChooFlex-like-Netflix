@@ -9,6 +9,7 @@ const movieRoutes = require("./routes/movies");
 const listRoutes = require("./routes/list");
 const seriesRoutes = require("./routes/series");
 const searchRoutes = require("./routes/search");
+const chatRoutes = require("./routes/chat");
 
 dotenv.config();
 
@@ -37,12 +38,10 @@ app.use(cors({
     'http://localhost:5174', 
     'http://localhost:3000',
     'http://localhost:3001', // Admin dashboard
-    'http://localhost:5003', // AI Chat Bot
     'http://127.0.0.1:5173', 
     'http://127.0.0.1:5174',
     'http://127.0.0.1:3000',
-    'http://127.0.0.1:3001', // Admin dashboard
-    'http://127.0.0.1:5003' // AI Chat Bot
+    'http://127.0.0.1:3001' // Admin dashboard
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -68,6 +67,7 @@ app.use("/api/movies", movieRoutes);
 app.use("/api/lists", listRoutes);
 app.use("/api/series", seriesRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/chat", chatRoutes);
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");

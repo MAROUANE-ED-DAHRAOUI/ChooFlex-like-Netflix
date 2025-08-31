@@ -22,13 +22,10 @@
 ChooFlex/
 ├── 📂 Main-App/
 │   ├── 📂 backend/                     # Main Node.js API Server (Port: 8000)
-│   └── 📂 frontend/                    # Customer App (Port: 5174)
+│   └── 📂 frontend/                    # Customer App with Integrated AI Widget (Port: 5174)
 ├── 📂 Admin-Dashboard/
 │   ├── 📂 admin-dashboard-backend/     # Admin API Server (Port: 5001)
 │   └── 📂 admin-dashboard-app/         # Admin Dashboard (Port: 3001)
-├── 📂 AI-CHAT-BOOT/
-│   ├── 📂 backend/                     # AI Chatbot API (Port: 5003)
-│   └── 📂 frontend/                    # Standalone Chat Interface (Port: 3003)
 ├── README.md                           # Comprehensive documentation
 └── PROJECT_SUMMARY.md                  # This summary file
 ```
@@ -43,12 +40,14 @@ ChooFlex/
       ▼                      ▼                      ▼                      ▼
 ┌─────────────────────────────────────────────────────────────────────────────────────┐
 │                            BACKEND LAYER                                           │
-├─────────────────┬─────────────────────────────┬─────────────────────────────────────┤
-│  Main Backend   │  Admin Dashboard Backend    │  AI Chatbot Backend                 │
-│  (Port: 8000)   │  (Port: 5001)              │  (Port: 5003)                      │
-│  - Auth API     │  - Content Management API  │  - OpenAI Integration              │
-│  - Movies API   │  - User Management API     │  - Context-aware Responses         │
-│  - Search API   │  - Analytics API           │  - Movie Knowledge Base            │
+├─────────────────┬─────────────────────────────────────────────────────────────────┤
+│  Main Backend   │  Admin Dashboard Backend                                        │
+│  (Port: 8000)   │  (Port: 5001)                                                  │
+│  - Auth API     │  - Content Management API                                      │
+│  - Movies API   │  - User Management API                                         │
+│  - Search API   │  - Analytics API                                               │
+│  - AI Widget    │  - Settings Management                                         │
+│    Integration  │                                                                │
 │  - Users API    │  - File Upload API         │  - Natural Language Processing     │
 └─────────────────┴─────────────────────────────┴─────────────────────────────────────┘
       ▲                      ▲                      ▲
@@ -113,15 +112,6 @@ ChooFlex/
 - **jsonwebtoken 9.0.0** - JWT token generation and verification
 - **express-validator 7.0+** - Input validation and sanitization
 - **helmet 7.0+** - Security middleware for Express apps
-
-#### AI Chatbot Backend (Port: 5003)
-- **Node.js 20+** - Server-side JavaScript runtime
-- **Express.js 4.18.2** - RESTful API framework
-- **OpenAI API 4.20+** - GPT-3.5-turbo integration for natural language processing
-- **Axios 1.6.0** - HTTP client for external API calls
-- **CORS 2.8.5** - Cross-origin request handling
-- **dotenv 16.3.1** - Secure environment configuration
-- **MongoDB Integration** - Direct database access for movie data
 
 ### 🌐 External Services & APIs
 - **TMDB API v3** - The Movie Database for authentic content data
@@ -210,43 +200,16 @@ src/components/
 - **📊 Real-time Analytics**: Live content performance metrics
 - **🎯 Content Optimization**: AI suggestions for content improvement
 
-### 🤖 AI Chatbot System (`AI-CHAT-BOOT/`)
-
-**Purpose**: Standalone AI assistant with ChooFlex content expertise  
-**Backend Port**: `http://localhost:5003`  
-**Frontend Port**: `http://localhost:3003`  
-**AI Model**: OpenAI GPT-3.5-turbo
-
-#### 🧠 AI Capabilities
-- **🎬 Content Expertise**: Comprehensive knowledge of all movies and series
-- **💬 Natural Language Processing**: Understanding complex user queries
-- **🔍 Intelligent Recommendations**: Personalized content suggestions
-- **📚 Context Awareness**: Maintains conversation history and user preferences
-- **🌍 Multilingual Support**: Fluent in Arabic and English
-- **⚡ Real-time Processing**: Fast response generation with context optimization
-- **🎯 Smart Filtering**: AI-powered content discovery based on user preferences
-
-#### 🏗️ AI Backend Architecture
-```
-AI-CHAT-BOOT/backend/
-├── server.js                 # Express server with OpenAI integration
-├── routes/
-│   ├── chat.js              # Main chat endpoint with GPT-3.5-turbo
-│   └── movies.js            # Content data fetching and processing
-├── middleware/              # Request validation and error handling
-└── .env                     # Secure OpenAI API key management
-```
-
 ---
 
 ## 🔧 Backend Services
 
 ### 🌐 Main API Server (`Main-App/backend/`)
 
-**Purpose**: Core application API with enhanced movie data access  
+**Purpose**: Core application API with integrated AI chat functionality  
 **Port**: `http://localhost:8000`  
 **Database**: MongoDB with optimized schemas  
-**AI Integration**: Provides data endpoints for AI chatbot
+**AI Integration**: Built-in OpenAI-powered chat for content recommendations
 
 #### 📡 Enhanced API Endpoints
 ```
@@ -254,23 +217,27 @@ Authentication:
 POST /api/auth/register    # User registration with validation
 POST /api/auth/login       # Secure user login with JWT
 
-Movies & Series (Enhanced for AI):
-GET  /api/movies          # Public endpoint for AI chatbot access
-GET  /api/movies/random   # Random content with AI-friendly metadata
-GET  /api/movies/find/:id # Specific movie with enhanced details
+Movies & Series:
+GET  /api/movies          # Get all movies with rich metadata
+GET  /api/movies/random   # Random content discovery
+GET  /api/movies/find/:id # Specific movie details
 GET  /api/movies/all      # All movies (admin) with search capabilities
-POST /api/movies          # Create movie (admin) with AI tagging
-PUT  /api/movies/:id      # Update movie (admin) with smart validation
-DELETE /api/movies/:id    # Safe delete movie (admin) with dependency check
+POST /api/movies          # Create movie (admin)
+PUT  /api/movies/:id      # Update movie (admin)
+DELETE /api/movies/:id    # Delete movie (admin)
+
+AI Chat Integration:
+POST /api/chat            # AI-powered content recommendations and chat
+GET  /api/chat/health     # AI service health check
 
 Content Lists:
-GET  /api/lists           # Get content lists with AI categorization
-POST /api/lists           # Create list (admin) with smart grouping
-DELETE /api/lists/:id     # Delete list (admin) with safety checks
+GET  /api/lists           # Get content lists
+POST /api/lists           # Create list (admin)
+DELETE /api/lists/:id     # Delete list (admin)
 
 Advanced Search:
-GET  /api/search          # Enhanced search with AI relevance scoring
-GET  /api/search/suggestions # AI-powered search suggestions
+GET  /api/search          # Enhanced search functionality
+GET  /api/search/suggestions # Search suggestions
 
 User Management:
 GET  /api/users/find/:id  # Get user profile with preferences
@@ -371,64 +338,6 @@ Admin-Dashboard/admin-dashboard-backend/
 │   ├── aiHelpers.js             # AI integration utilities
 │   └── dbHelpers.js             # Database optimization helpers
 └── server.js                     # Express server with security middleware
-```
-
-### 🤖 AI Chatbot Backend (`AI-CHAT-BOOT/backend/`)
-
-**Purpose**: Intelligent conversational AI for content discovery  
-**Port**: `http://localhost:5003`  
-**AI Model**: OpenAI GPT-3.5-turbo  
-**Specialization**: ChooFlex content expertise and recommendations
-
-#### 🧠 AI Integration Features
-- **OpenAI API Integration**: Direct GPT-3.5-turbo communication
-- **Context Optimization**: Smart token management for efficient conversations
-- **Content Knowledge Base**: Real-time access to movie/series database
-- **Multilingual Processing**: Arabic and English language support
-- **Smart Response Caching**: Optimized performance for common queries
-- **Error Handling**: Graceful fallbacks for AI service interruptions
-
-#### ⚡ AI Backend Architecture
-```javascript
-// Main Chat Endpoint
-POST /api/chat {
-  message: String,
-  conversationHistory: [Object],
-  userPreferences: Object
-}
-
-// AI Processing Pipeline:
-1. Input Validation & Sanitization
-2. Context Building with Movie Database
-3. Token Optimization (22,000+ token management)
-4. OpenAI GPT-3.5-turbo API Call
-5. Response Processing & Enhancement
-6. Context Cleanup & Caching
-```
-
-#### 🎯 Smart Features
-```javascript
-// Content Context Building
-const getMoviesData = async () => {
-  const movies = await fetchMovies();  # 183+ movies
-  const series = await fetchSeries();  # 50+ series
-  
-  // AI Optimization: Truncate descriptions, limit to 10 items per category
-  return optimizeForAI(movies, series);
-};
-
-// Token Management
-const optimizeContext = (content) => {
-  return {
-    movies: content.movies.slice(0, 10).map(movie => ({
-      title: movie.title,
-      genre: movie.genre,
-      year: movie.year,
-      description: movie.desc.substring(0, 100) + '...'
-    })),
-    series: content.series.slice(0, 10).map(/* similar optimization */)
-  };
-};
 ```
 
 ---
@@ -573,16 +482,13 @@ JWT_SECRET=your_admin_jwt_secret
 PORT=5001
 MAIN_API_URL=http://localhost:8000
 
-# AI Chatbot Backend (.env)
+# Main Backend (.env) - Updated with AI Integration
 OPENAI_API_KEY=sk-proj-your-openai-api-key
-MONGO_URI=mongodb://localhost:27017/netflix
-PORT=5003
-MAIN_API_URL=http://localhost:8000
 ```
 
 #### 3. **Backend Services**
 ```bash
-# Main API Server (Core Application)
+# Main API Server (Core Application with AI Integration)
 cd Main-App/backend/
 npm install
 npm start          # Runs on http://localhost:8000
@@ -591,11 +497,6 @@ npm start          # Runs on http://localhost:8000
 cd Admin-Dashboard/admin-dashboard-backend/
 npm install
 npm start          # Runs on http://localhost:5001
-
-# AI Chatbot Backend (OpenAI Integration)
-cd AI-CHAT-BOOT/backend/
-npm install
-npm start          # Runs on http://localhost:5003
 ```
 
 #### 4. **Frontend Applications**
@@ -609,11 +510,6 @@ npm run dev        # Runs on http://localhost:5174
 cd Admin-Dashboard/admin-dashboard-app/
 npm install
 npm start          # Runs on http://localhost:3001
-
-# AI Chat Standalone (Optional Development)
-cd AI-CHAT-BOOT/frontend/
-npm install
-npm run dev        # Runs on http://localhost:3003
 ```
 
 #### 5. **Database Setup**
@@ -651,12 +547,10 @@ Admin Dashboard: http://localhost:3001
 # API Endpoints
 Main API: http://localhost:8000/api
 Admin API: http://localhost:5001/api
-AI Chat API: http://localhost:5003/api
 
 # Health Checks
 Main API Health: http://localhost:8000/health
 Admin API Health: http://localhost:5001/health
-AI API Health: http://localhost:5003/health
 ```
 
 ### 🔧 Development Tools & Commands
