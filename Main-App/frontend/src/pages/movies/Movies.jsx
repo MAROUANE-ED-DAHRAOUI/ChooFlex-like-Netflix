@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Search, Movie } from '@mui/icons-material';
 import api from "../../services/api";
 import Navbar from "../../components/navbar/Navbar";
 import MovieCard from "../../components/movieCard/MovieCard";
@@ -11,8 +12,9 @@ export default function Movies() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMovies, setFilteredMovies] = useState([]);
-  const [sortBy, setSortBy] = useState("title"); // title, year, rating
   const [selectedGenre, setSelectedGenre] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedRating, setSelectedRating] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   
@@ -26,13 +28,22 @@ export default function Movies() {
     "Animation", "Documentary", "Mystery", "War", "Western"
   ];
 
+  // Get unique years from movies
+  const getUniqueYears = () => {
+    const years = new Set();
+    movies.forEach(movie => {
+      if (movie.year) years.add(movie.year);
+    });
+    return Array.from(years).sort((a, b) => b - a);
+  };
+
   useEffect(() => {
     fetchMovies();
   }, []);
 
   useEffect(() => {
     filterAndSortMovies();
-  }, [movies, searchTerm, sortBy, selectedGenre]);
+  }, [movies, searchTerm, selectedGenre, selectedYear, selectedRating]);
 
   const fetchMovies = async () => {
     try {
@@ -73,18 +84,16 @@ export default function Movies() {
       );
     }
 
-    // Sort movies
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "year":
-          return (b.year || 0) - (a.year || 0);
-        case "rating":
-          return (b.rating || 0) - (a.rating || 0);
-        case "title":
-        default:
-          return (a.title || "").localeCompare(b.title || "");
-      }
-    });
+    // Filter by year
+    if (selectedYear) {
+      filtered = filtered.filter(item => item.year === parseInt(selectedYear));
+    }
+
+    // Filter by rating
+    if (selectedRating) {
+      const minRating = parseFloat(selectedRating);
+      filtered = filtered.filter(item => (item.rating || 0) >= minRating);
+    }
 
     setFilteredMovies(filtered);
     setHasMore(filtered.length > page * ITEMS_PER_PAGE);
@@ -95,13 +104,18 @@ export default function Movies() {
     setPage(1);
   };
 
-  const handleSortChange = (newSortBy) => {
-    setSortBy(newSortBy);
+  const handleGenreChange = (genre) => {
+    setSelectedGenre(genre);
     setPage(1);
   };
 
-  const handleGenreChange = (genre) => {
-    setSelectedGenre(genre);
+  const handleYearChange = (year) => {
+    setSelectedYear(year);
+    setPage(1);
+  };
+
+  const handleRatingChange = (rating) => {
+    setSelectedRating(rating);
     setPage(1);
   };
 
@@ -145,50 +159,67 @@ export default function Movies() {
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="movies__filters">
-          <div className="movies__genre-filter">
-            <label htmlFor="genre-select">Genre:</label>
+        {/* Compact Controls */}
+        <div className="movies__controls">
+          <div className="movies__controls-inline">
+            {/* Search Input */}
+            <div className="movies__search-compact">
+              <Search className="movies__search-icon" />
+              <input
+                type="text"
+                placeholder="Search movies..."
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="movies__search-field-compact"
+              />
+            </div>
+
+            {/* Genre Filter */}
             <select
-              id="genre-select"
               value={selectedGenre}
               onChange={(e) => handleGenreChange(e.target.value)}
-              className="movies__genre-select"
+              className="movies__filter-select-compact"
             >
               <option value="">All Genres</option>
               {genres.map(genre => (
                 <option key={genre} value={genre}>{genre}</option>
               ))}
             </select>
-          </div>
-        </div>
 
-        {/* Controls */}
-        <div className="movies__controls">
-          <div className="movies__stats">
-            {loading ? (
-              <span>Loading...</span>
-            ) : (
-              <span>
-                {filteredMovies.length} movies found
-                {selectedGenre && ` in ${selectedGenre}`}
-                {searchTerm && ` for "${searchTerm}"`}
-              </span>
-            )}
-          </div>
-          
-          <div className="movies__sort">
-            <label htmlFor="sort-select">Sort by:</label>
+            {/* Year Filter */}
             <select
-              id="sort-select"
-              value={sortBy}
-              onChange={(e) => handleSortChange(e.target.value)}
-              className="movies__sort-select"
+              value={selectedYear}
+              onChange={(e) => handleYearChange(e.target.value)}
+              className="movies__filter-select-compact"
             >
-              <option value="title">Title (A-Z)</option>
-              <option value="year">Year (Newest)</option>
-              <option value="rating">Rating (Highest)</option>
+              <option value="">All Years</option>
+              {getUniqueYears().map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
             </select>
+
+            {/* Rating Filter */}
+            <select
+              value={selectedRating}
+              onChange={(e) => handleRatingChange(e.target.value)}
+              className="movies__filter-select-compact"
+            >
+              <option value="">All Ratings</option>
+              <option value="8">8+ Stars</option>
+              <option value="7">7+ Stars</option>
+              <option value="6">6+ Stars</option>
+              <option value="5">5+ Stars</option>
+            </select>
+
+            {/* Results Count */}
+            <div className="movies__results-count">
+              <Movie className="movies__results-icon" />
+              {loading ? (
+                <span>Loading...</span>
+              ) : (
+                <span><span>{filteredMovies.length}</span> movies found</span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -212,12 +243,14 @@ export default function Movies() {
                 ? `No movies match your filters`
                 : "No movies available at the moment"}
             </p>
-            {(searchTerm || selectedGenre) && (
+            {(searchTerm || selectedGenre || selectedYear || selectedRating) && (
               <div className="movies__clear-filters">
                 <button 
                   onClick={() => {
                     handleSearch("");
                     handleGenreChange("");
+                    handleYearChange("");
+                    handleRatingChange("");
                   }}
                   className="movies__clear-search"
                 >

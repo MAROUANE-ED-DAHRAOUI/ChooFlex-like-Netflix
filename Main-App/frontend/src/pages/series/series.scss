@@ -55,141 +55,237 @@
     }
   }
 
+  // Compact Controls
   &__controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background-color: $background-card;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(20, 20, 20, 0.6) 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+
+    @include mobile {
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 10px;
+    }
+  }
+
+  // Inline layout for compact design
+  &__controls-inline {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
     @include mobile {
       flex-direction: column;
-      gap: 1rem;
-      padding: 1rem;
+      gap: 0.75rem;
+      align-items: stretch;
     }
   }
 
-  &__stats {
-    font-size: 0.875rem;
-    color: $text-secondary;
-    font-weight: 500;
-  }
-
-  &__sort {
+  // Compact Results Count
+    &__results-count {
+    color: #ffffff;
+    font-size: 1rem;
+    opacity: 0.9;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
 
-    label {
-      font-size: 0.875rem;
-      color: $text-secondary;
+    .series__results-icon {
+      font-size: 18px;
+      color: #e50914;
+      opacity: 0.8;
+    }
+
+    span {
+      span {
+        color: #e50914;
+        font-weight: 600;
+      }
     }
   }
 
-  &__sort-select {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.25rem;
-    font-size: 0.875rem;
-    cursor: pointer;
+  // Compact Search
+  &__search-compact {
+    position: relative;
+    flex: 1;
+    max-width: 350px;
+    min-width: 220px;
+
+    @include mobile {
+      max-width: none;
+      min-width: auto;
+      order: 2;
+    }
+  }
+
+  &__search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    z-index: 2;
+  }
+
+  &__search-field-compact {
+    width: 100%;
+    padding: 0.65rem 0.75rem 0.65rem 2.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 0.85rem;
     transition: all 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+    }
 
     &:focus {
       outline: none;
-      border-color: $netflix-red;
-      background-color: rgba(255, 255, 255, 0.15);
+      border-color: #e50914;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.15);
     }
 
-    option {
-      background-color: $surface-color;
-      color: white;
-    }
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-
-    @include tablet {
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 1rem;
+    &:hover:not(:focus) {
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     @include mobile {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 0.75rem;
+      padding: 0.6rem 0.75rem 0.6rem 2rem;
+      font-size: 0.8rem;
     }
   }
 
-  // Skeleton Loading
-  &__skeleton {
+  // Compact Filter Selects
+  &__filter-select-compact {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    padding: 0.65rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 130px;
+    max-width: 160px;
+
+    &:focus {
+      outline: none;
+      border-color: #e50914;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.15);
+    }
+
+    &:hover:not(:focus) {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    option {
+      background: #1a1a1a;
+      color: #ffffff;
+      font-size: 0.8rem;
+    }
+
+    @include mobile {
+      min-width: 90px;
+      max-width: none;
+      flex: 1;
+      font-size: 0.75rem;
+      padding: 0.6rem 0.5rem;
+      order: 3;
+    }
+  }
+
+  // Rows Layout (like home page) - Professional display without titles
+  &__rows {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    animation: pulse 1.5s ease-in-out infinite;
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    // Override MovieRow spacing for series page
+    .movie-row {
+      .row-title {
+        display: none; // Hide genre titles for professional look
+      }
+      
+      .row-container {
+        margin-top: 0; // Remove top margin since no title
+      }
+    }
+
+    @include mobile {
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+  }
+
+  // Loading state for rows
+  &__loading {
+    margin-top: 2rem;
+  }
+
+  &__skeleton-row {
+    margin-bottom: 2rem;
+  }
+
+  &__skeleton-title {
+    height: 1.5rem;
+    width: 200px;
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.05) 25%, 
+      rgba(255, 255, 255, 0.15) 50%, 
+      rgba(255, 255, 255, 0.05) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  &__skeleton-content {
+    display: flex;
+    gap: 1rem;
+    overflow: hidden;
+  }
+
+  &__skeleton-card {
+    min-width: 200px;
+    flex-shrink: 0;
   }
 
   &__skeleton-img {
     aspect-ratio: 2/3;
     background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0.1) 25%, 
-      rgba(255, 255, 255, 0.2) 50%, 
-      rgba(255, 255, 255, 0.1) 75%
+      rgba(255, 255, 255, 0.05) 25%, 
+      rgba(255, 255, 255, 0.15) 50%, 
+      rgba(255, 255, 255, 0.05) 75%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 0.5rem;
-  }
-
-  &__skeleton-title {
-    height: 1.25rem;
-    background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0.1) 25%, 
-      rgba(255, 255, 255, 0.2) 50%, 
-      rgba(255, 255, 255, 0.1) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 0.25rem;
-    width: 80%;
-  }
-
-  &__skeleton-desc {
-    height: 0.875rem;
-    background: linear-gradient(90deg, 
-      rgba(255, 255, 255, 0.1) 25%, 
-      rgba(255, 255, 255, 0.2) 50%, 
-      rgba(255, 255, 255, 0.1) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 0.25rem;
-    width: 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 12px;
   }
 
   @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 
   @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.7;
-    }
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
   }
 
   // Empty State
@@ -213,45 +309,25 @@
     }
   }
 
+  // Clear Search Button
   &__clear-search {
-    background-color: $netflix-red;
+    background: linear-gradient(135deg, $netflix-red 0%, #d32f2f 100%);
     border: none;
     color: white;
     padding: 0.75rem 1.5rem;
-    border-radius: 0.25rem;
+    border-radius: 0.375rem;
     font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: $netflix-red-dark;
-    }
-  }
-
-  // Load More
-  &__load-more {
-    text-align: center;
-    margin-top: 2rem;
-  }
-
-  &__load-more-btn {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-color: $netflix-red;
       transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4);
     }
   }
+
+
 
   // Error State
   &__error {
@@ -289,26 +365,6 @@
 
     &:hover {
       background-color: $netflix-red-dark;
-    }
-  }
-
-  // Responsive adjustments
-  @include mobile {
-    &__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    &__controls {
-      text-align: center;
-    }
-
-    &__sort {
-      flex-direction: column;
-      width: 100%;
-    }
-
-    &__sort-select {
-      width: 100%;
     }
   }
 }

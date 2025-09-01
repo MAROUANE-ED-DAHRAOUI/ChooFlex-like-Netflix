@@ -97,7 +97,7 @@ const Navbar = ({ onSearch, searchQuery, setSearchQuery, clearSearch }) => {
                   navigate('/series');
                 }}
               >
-                TV Shows
+                Series
               </a>
             </li>
             <li>

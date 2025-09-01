@@ -160,17 +160,17 @@
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: $spacing-6;
-    padding: $spacing-4 0;
-
-    @include mobile {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: $spacing-4;
-    }
+    gap: 1rem;
+    margin-bottom: 2rem;
 
     @include tablet {
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: $spacing-5;
+      gap: 0.75rem;
+    }
+
+    @include mobile {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.5rem;
     }
   }
 
