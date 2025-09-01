@@ -7,12 +7,15 @@ import './heroBanner.scss';
 const HeroBanner = ({ type, onGenreChange }) => {
   const [selectedGenre, setSelectedGenre] = useState('');
   
-  // Use React Query for random movie with forced refetch on mount
+  // Use React Query for random movie with optimized loading
   const { data: movie, isLoading, error, refetch } = useRandomMovie(type, {
-    // Force refetch when component mounts (due to key change)
+    // Faster loading configuration
     refetchOnMount: 'always',
-    // Reduce stale time so it's more likely to refetch
-    staleTime: 0
+    staleTime: 0,
+    cacheTime: 60000, // 1 minute cache
+    retry: 1, // Reduce retries for faster failure
+    retryDelay: 500, // Faster retry
+    networkMode: 'online'
   });
 
   // Force refetch on component mount (when key changes from Home)

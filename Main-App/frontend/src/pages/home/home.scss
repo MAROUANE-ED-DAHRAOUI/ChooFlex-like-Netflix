@@ -10,15 +10,15 @@
     z-index: 1;
     padding-bottom: $spacing-20;
 
-    // Content fade-in animation
+    // Content fade-in animation - faster
     .content-fade-in {
-      animation: fadeInUp 0.5s ease-out;
+      animation: fadeInUp 0.3s ease-out;
     }
 
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
       }
       to {
         opacity: 1;
@@ -58,8 +58,8 @@
     .loading-lists {
       padding: $spacing-4 0;
 
-      // Add a subtle fade animation for loading state
-      animation: fadeIn 0.3s ease-in;
+      // Faster loading animation
+      animation: fadeIn 0.2s ease-in;
     }
 
     .content-lists {
@@ -146,7 +146,7 @@
   }
 }
 
-// Animation for smooth content loading
+// Faster animation for smooth content loading
 .home-content {
-  animation: fadeIn 0.6s ease-out;
+  animation: fadeIn 0.4s ease-out;
 }

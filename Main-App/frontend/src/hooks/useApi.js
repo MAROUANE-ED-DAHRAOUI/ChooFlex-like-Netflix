@@ -19,7 +19,7 @@ export const QUERY_KEYS = {
   SEARCH: 'search'
 };
 
-// Custom hook for fetching lists with caching
+// Custom hook for fetching lists with caching and performance optimization
 export const useLists = (type = null, genre = null, options = {}) => {
   const cacheKey = listCache.generateKey('lists', { type, genre });
   
@@ -39,8 +39,8 @@ export const useLists = (type = null, genre = null, options = {}) => {
       recordCacheMiss();
       recordApiCall();
 
-      // Fetch from API
-      const data = await getLists(type, genre);
+      // Fetch from API with optimized parameters
+      const data = await getLists(type, genre, false); // Don't populate initially for faster load
       
       // Cache the result
       listCache.set(cacheKey, data);
@@ -48,10 +48,13 @@ export const useLists = (type = null, genre = null, options = {}) => {
       recordLoadTime(performance.now() - startTime);
       return data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
-    retry: 2,
+    staleTime: 2 * 60 * 1000, // Reduced to 2 minutes for faster refresh
+    cacheTime: 5 * 60 * 1000, // Reduced cache time
+    retry: 1, // Reduced retry attempts for faster failure detection
     refetchOnWindowFocus: false,
+    // Enable faster loading
+    suspense: false,
+    useErrorBoundary: false,
     ...options
   });
 };

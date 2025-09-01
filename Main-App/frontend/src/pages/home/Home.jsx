@@ -28,7 +28,7 @@ const Home = ({ type }) => {
   const { prefetchLists, prefetchRandomMovie } = usePrefetch();
   const { startBackgroundPrefetch } = usePrefetchService();
 
-  // Main lists query with React Query
+  // Main lists query with React Query - Optimized for speed
   const {
     data: lists = [],
     isLoading,
@@ -38,7 +38,15 @@ const Home = ({ type }) => {
     // Keep previous data while loading new data
     keepPreviousData: true,
     // Prefetch on mount
-    refetchOnMount: true
+    refetchOnMount: 'always',
+    // Reduce network delay
+    networkMode: 'online',
+    // Faster retry
+    retryDelay: 500,
+    // Enable background refetch for better UX
+    refetchOnReconnect: true,
+    // Initial data from cache if available
+    initialDataUpdatedAt: () => Date.now() - 30000 // Consider cache fresh for 30s
   });
 
   // Search query with React Query
@@ -64,10 +72,29 @@ const Home = ({ type }) => {
     setHeroKey(prev => prev + 1);
   }, [location.pathname]); // This triggers when the pathname changes
 
-  // Start background prefetching for better UX
+  // Start background prefetching immediately for better UX
   useEffect(() => {
+    // Start prefetching immediately without delay
     startBackgroundPrefetch();
-  }, [startBackgroundPrefetch]);
+    
+    // Prefetch the most common data immediately
+    const prefetchCriticalData = async () => {
+      try {
+        // Prefetch random movie for hero immediately
+        prefetchRandomMovie(type);
+        
+        // Prefetch most popular genres in background
+        const popularGenres = ['action', 'comedy', 'drama'];
+        popularGenres.forEach(genre => {
+          setTimeout(() => prefetchLists(type, genre), 100);
+        });
+      } catch (error) {
+        console.log('Critical prefetch failed:', error);
+      }
+    };
+    
+    prefetchCriticalData();
+  }, [startBackgroundPrefetch, prefetchLists, prefetchRandomMovie, type]);
 
   // Prefetch data in the background for better UX
   useEffect(() => {
@@ -146,9 +173,17 @@ const Home = ({ type }) => {
             )}
 
             {isLoading ? (
-              // Enhanced loading skeleton
+              // Show minimal loading for faster perceived performance
               <div className="loading-lists">
-                <MovieRowSkeleton count={4} />
+                <MovieRowSkeleton count={2} />
+                {/* Show partial content if available */}
+                {lists.length > 0 && (
+                  <div className="content-lists content-fade-in">
+                    {lists.slice(0, 2).map((list, index) => (
+                      <List key={list._id || index} list={list} />
+                    ))}
+                  </div>
+                )}
               </div>
             ) : (
               // Actual content with fade-in animation

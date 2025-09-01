@@ -5,6 +5,7 @@ const API_BASE_URL = 'http://localhost:8000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 8000, // 8 second default timeout
   headers: {
     'Content-Type': 'application/json',
   },
@@ -101,18 +102,25 @@ export const moviesAPI = {
 
 // Lists API calls
 export const listsAPI = {
-  getAll: async (type = null, genre = null, populate = true) => {
-    // Use real endpoint with optional population
+  getAll: async (type = null, genre = null, populate = false) => {
+    // Optimized for speed - don't populate by default
     const params = {};
     if (type) params.type = type;
     if (genre) params.genre = genre;
     if (populate) params.populate = 'true';
-    const response = await api.get('/lists', { params });
+    
+    // Add timeout for faster failure detection
+    const response = await api.get('/lists', { 
+      params,
+      timeout: 5000 // 5 second timeout
+    });
     return response.data;
   },
 
   getById: async (id) => {
-    const response = await api.get(`/lists/${id}`);
+    const response = await api.get(`/lists/${id}`, {
+      timeout: 3000 // 3 second timeout for single items
+    });
     return response.data;
   },
   
