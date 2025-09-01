@@ -304,7 +304,7 @@ const AIChatWidget = () => {
               </div>
               <div>
                 <h4>ChooFlex AI Assistant</h4>
-                <span>🎬 اسحب من هنا لتحريك / Drag here to move</span>
+                {/* <span>🎬 اسحب من هنا لتحريك / Drag here to move</span> */}
               </div>
             </div>
             <div className="header-controls">

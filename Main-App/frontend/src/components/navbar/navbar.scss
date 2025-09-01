@@ -45,17 +45,48 @@
 
     .logo {
       font-size: $font-2xl;
-      font-weight: $font-bold;
-      color: $primary-red;
+      font-weight: 900;
+      background: linear-gradient(135deg, #e50914 0%, #ff6b35 50%, #ffd700 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       cursor: pointer;
-      transition: transform $transition-fast;
+      transition: all 0.3s ease;
+      position: relative;
+      letter-spacing: -0.02em;
+      display: inline-block;
+      
+      // Adding glow effect
+      &::before {
+        content: 'ChooFlex';
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(135deg, #e50914 0%, #ff6b35 50%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: blur(6px);
+        opacity: 0.6;
+        z-index: -1;
+      }
 
       &:hover {
         transform: scale(1.05);
+        filter: drop-shadow(0 0 15px rgba(229, 9, 20, 0.4));
+        
+        &::before {
+          filter: blur(8px);
+          opacity: 0.8;
+        }
       }
 
       @include mobile {
         font-size: $font-xl;
+        
+        &::before {
+          filter: blur(4px);
+        }
       }
     }
 

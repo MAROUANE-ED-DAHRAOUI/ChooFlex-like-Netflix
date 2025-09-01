@@ -36,15 +36,60 @@
   }
 
   &__logo {
-    height: 6rem;
-    font-weight: bold;
-    margin-bottom: 2.5rem;
-    filter: drop-shadow(0 6px 32px #FFD700) drop-shadow(0 0px 12px #fff);
-    /* If using SVG text, set fill to #FFD700 (gold) for color. */
-    /* Left-aligned by default */
-    @include mobile {
-      height: 3.5rem;
-      margin-bottom: 2rem;
+    text-align: center;
+    margin-bottom: $spacing-6;
+    cursor: pointer;
+    transition: transform $transition-fast;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    span {
+      font-size: $font-3xl;
+      font-weight: 900;
+      background: linear-gradient(135deg, #e50914 0%, #ff6b35 50%, #ffd700 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      letter-spacing: -0.02em;
+      display: inline-block;
+      
+      // Adding glow effect
+      &::before {
+        content: 'ChooFlex';
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(135deg, #e50914 0%, #ff6b35 50%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: blur(6px);
+        opacity: 0.6;
+        z-index: -1;
+      }
+
+      &:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 15px rgba(229, 9, 20, 0.4));
+        
+        &::before {
+          filter: blur(8px);
+          opacity: 0.8;
+        }
+      }
+
+      @include mobile {
+        font-size: $font-2xl;
+        
+        &::before {
+          filter: blur(4px);
+        }
+      }
     }
   }
 

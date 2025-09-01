@@ -127,18 +127,14 @@ export default function Register() {
     <div className="register">
       {/* Header */}
       <div className="register__header">
-          <div className="register__header-content" style={{ display: 'flex', alignItems: 'flex-end' }}>
-            <img
-              className="register__logo"
-              src="/choowflix-logo.svg"
-              alt="ChoowFlix"
-              style={{ height: '1rem', marginTop: '1.5rem', marginBottom: '1.5rem' }}
-            />
+          <div className="register__header-content">
+            <div className="register__logo" onClick={() => navigate('/')}>
+              <span>ChooFlex</span>
+            </div>
             <button 
               className="register__signin-btn" 
               onClick={handleLoginClick}
               type="button"
-              style={{ marginLeft: '12rem' }}
             >
               Sign In
             </button>

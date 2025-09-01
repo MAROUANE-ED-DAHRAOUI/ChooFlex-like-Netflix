@@ -67,7 +67,7 @@ const Login = () => {
       <div className="login-container">
         <div className="login-header">
           <Link to="/" className="logo">
-            <img src="/choowflix-logo.svg" alt="ChoowFlix" style={{ height: '40px' }} />
+            <span>ChooFlex</span>
           </Link>
         </div>
         
